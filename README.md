@@ -22,8 +22,27 @@ REGLES RELATIVES AU GIT
 - se créer une branche personnelle avec git branch avant de commencer à modifier le code
 - nommer sa branche de façon pertinente (classe qu'on est en train de créer, fonctionnalité qu'on développe, etc...)
 - bien faire attention à pusher sur sa branche (git push origin nom_branche, pas master)
+- avant de push, adapter à GLSL version 330
 - à chaque itération (après le merge d'une branche personnelle avec la branche master, dupliquer le dossier contenant tout le projet. Appeler cette copie Projet_local par exemple. Supprimer tout ce qu'il y a dans ImacRun-build et les fichiers git. Refaire cmake. C'est dans ce dossier que vous ferez vos test et travaillerez, l'autre ne sert qu'à faire des push et pull avec git. Une fois que tout marche bien (test valgrind aussi), vous pourrez remplacer les fichiers du dossier Projet (git) par ceux que vous avez modifié dans Projet_local (ne pas oublier de re-tester le code dans Projet avant de push, on ne sait jamais).
 
 Ne pas hésiter à me demander de l'aide sur ce sujet, j'ai l'habitude ^^
+
+PROGRAMME DE TRAVAIL
+
+Semaine du 17 au 21 décembre : 9h-17h à Copernic. Repos le weekend.
+SI boulot bendant vacances : idem. Repos les 24, 25 décembre et au nouvel an.
+Si on coince de son côté, demander aide au groupe. Si on y arrive pas, demander aide au prof.
+
+REGLES DU CODE
+- utiliser #pragma once
+- coder sur Sublim text
+- coder en anglais (nom fonctions et attributs, commentaires...)
+- commenter classes, attributs, méthodes
+- nommage : m_attribut, nomFonction
+- tester code avec valgrind avant de push
+
+INSERER ICI NOTICE DE VALGRIND
+
+INSERER ICI NOTICE DE DOXYGEN
 
 
