@@ -17,8 +17,6 @@ Refaite un cmake et make et tester le code du dossier TP5.
 
 Si tout marche bien vous n'aurez plus qu'à faire des push et pull à partir de maintenant et vous garderez toujours les fichiers cmake adaptés à votre machine.
 
-UTILE : 
-
 REGLES RELATIVES AU GIT
 - ne jamais bosser diretement sur la branche master !
 - se créer une branche personnelle avec git branch avant de commencer à modifier le code
