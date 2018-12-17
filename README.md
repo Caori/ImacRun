@@ -70,14 +70,17 @@ INSERER ICI NOTICE DE DOXYGEN
 
   exemple de définition d'une classe:
   
-  /// \class className
-  /// \brief class description
-  class className{
-      /// \brief function description
-      /// \param parameterName : description
-      /// \return description
-      int function(int a, float b);
-  };
+    /// \class className
+    /// \brief class description
+    class className{
+      
+        /// \brief attribut description (facultatif)
+        int _size;    -->doxygène vas lister tout seul les attributs, pas besoin de spécifier que ce sont des attributs
+        /// \brief function description
+        /// \param parameterName : description
+        /// \return description
+        int function(int a, float b);
+    };
   
   C'est tout.
   On générera les doc 1 fois, à la fin, avec un cmake particulier (qui ne servira que pour la doc, on reprendre celui du TPdoxygene)
