@@ -44,5 +44,42 @@ REGLES DU CODE
 INSERER ICI NOTICE DE VALGRIND
 
 INSERER ICI NOTICE DE DOXYGEN
+  Commenter avec doxygen :  ON COMMENTE DANS LES .HPP !!
+    Pour chaque doc qu'on veut générer:
+    Recopier ces lignes en adaptant à la ce qu'on veut documenter, ceci crée la page d'accueil de la Doc (on en fait plusieurs, une pour chaque hpp.
+        /// \version 0.1
+        /// \mainpage
+        /// \image html myImage.jpg
+        /// \tableofcontents
+        /// \section instroduction_sec What for?
+        /// VectorD is a super tool.
+        /// \section install_bigsec How to install
+        /// \subsection dependencies_sec Dependecies
+        /// \li nothing
+        /// \li nothing else
+        /// \li Doxygen (if you want the documentation)
+        /// \subsection install_sec Install with cmake (Linux)
+        /// \li go to garamon dir
+        /// \li mkdir build
+        /// \li cd build
+        /// \li cmake ..
+        /// \li make
+        /// \li make html
+        /// \li The documentation is located in [path to build]/doc/doc-doxygen/html/index.html
 
+  exemple de définition d'une classe:
+  
+  /// \class className
+  /// \brief class description
+  class className{
+  
+      /// \brief function description
+      /// \param parameterName : description
+      /// \return description
+      int function(int a, float b);
+  };
+  
+  C'est tout.
+  On générera les doc 1 fois, à la fin, avec un cmake particulier (qui ne servira que pour la doc, on reprendre celui du TPdoxygene)
+  
 
