@@ -47,6 +47,7 @@ INSERER ICI NOTICE DE DOXYGEN
   Commenter avec doxygen :  ON COMMENTE DANS LES .HPP !!
     Pour chaque doc qu'on veut générer:
     Recopier ces lignes en adaptant à la ce qu'on veut documenter, ceci crée la page d'accueil de la Doc (on en fait plusieurs, une pour chaque hpp.
+    
         /// \version 0.1
         /// \mainpage
         /// \image html myImage.jpg
@@ -72,7 +73,6 @@ INSERER ICI NOTICE DE DOXYGEN
   /// \class className
   /// \brief class description
   class className{
-  
       /// \brief function description
       /// \param parameterName : description
       /// \return description
