@@ -98,6 +98,7 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
 			else{
 				if (G==255){
 					grid[i][j][0]=5;
+					grid[i][j][1]=5;
 				}
 				else{
 					if (B==255){

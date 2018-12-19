@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
      *********************************/
     Scene scene;
 
-	Personnage personnage("/chemin/ImacRun/TP_template/SDLtemplate.cpp", scene.getLargeur()/2);
+	Personnage personnage("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp", scene.getLargeur()/2);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -75,6 +75,18 @@ int main(int argc, char** argv) {
            		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
            	}
            	*/
+
+            // se baisser
+            /*if(windowManager.isKeyPressed(SDLK_s) == true){
+                // pour se baisser
+                if(personnage._y == 1.0){
+                    personnage._y -= 1.0;
+                }
+                // pour se relever
+                else{
+                    personnage._y = 1.0;
+                }
+            }*/
         }
         
 

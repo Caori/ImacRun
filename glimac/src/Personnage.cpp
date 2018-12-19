@@ -34,8 +34,12 @@ void Personnage::draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMa
 }
 
 void Personnage::moveFront(const std::vector< std::vector< std::vector<int>>> &grid){
-    if (grid[grid.size()-_z-1][grid[0].size()-_x][_y] != 4){
-        _z+=0.1;
+    // if obstacle or ark
+    if (grid[grid.size()-_z-1][grid[0].size()-_x][_y] == 4 || grid[grid.size()-_z-1][grid[0].size()-_x][2] == 3){
+        _z += 0.0;
+    }
+    else{
+        _z += 0.1;
     }
 }
 
@@ -43,14 +47,20 @@ void Personnage::moveLeft(const std::vector< std::vector< std::vector<int>>> &gr
     // _x, _y, _z = character's position
     // grid[longueur][largeur][hauteur]
     // grille en miroir (la gauche est à droite)
-    if (grid[grid.size()-_z-1][grid[0].size()-_x+1][0] != 5){
+    if (grid[grid.size()-_z-1][grid[0].size()-_x+1][1] != 5){
         _x--;
+    }
+    else{
+        _x = _x;
     }
 }
 
 void Personnage::moveRight(const std::vector< std::vector< std::vector<int>>> &grid){
-    if (grid[grid.size()-_z-1][grid[0].size()-_x-1][0] != 5){
+    if (grid[grid.size()-_z-1][grid[0].size()-_x-1][1] != 5){
         _x++;
+    }
+    else{
+        _x = _x;
     }
 }
 
@@ -64,7 +74,6 @@ void Personnage::moveRight(const std::vector< std::vector< std::vector<int>>> &g
     }
 }*/
 
-// chute progressive
 bool Personnage::fall(const std::vector< std::vector< std::vector<int>>> &grid){
     if (grid[grid.size()-_z-1][_x][0] != 0){
         return 0;
