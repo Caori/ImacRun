@@ -78,16 +78,16 @@ int main(int argc, char** argv) {
 
         //transformer vue puis afficher scene***SCENE***
         //viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0,1,0));
-        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.3, -2));
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(0., 0, -5+1*windowManager.getTime()));
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-largeur/2, -1, 0));
+        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.f, -1.f));
+ 
+        //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(-largeur/2, -1.3, -7+windowsManager.getTime()));
 
         scene.drawScene(viewMatrix);
 
 
 		//***PERSO***
-        Personnage personnage("/home/6im2/ejarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
-        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.3, -2))*rotationMatrix;
+        Personnage personnage("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
+        //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.3, -2))*rotationMatrix;
         personnage.draw(0, 0, viewMatrix, rotationMatrix, scene._cube, scene._sphere);
 
 

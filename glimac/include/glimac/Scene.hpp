@@ -22,14 +22,14 @@ class Scene{
 		glm::mat4 _rotationMatrix;
 
 	private:
-		std::vector< std::vector<int>> _grid;
+		std::vector< std::vector< std::vector<int>>> _grid;
 
 	public:
 		//Constructeur et destructeurs
 		Scene();
 		~Scene(){}
         
-		std::vector< std::vector<int>> readPPM();
+		std::vector< std::vector< std::vector<int>>> readPPM();
 
 		int getLargeur(){
 			return _grid[0].size();

@@ -43,7 +43,7 @@ void Scene::drawScene(glm::mat4 &viewMatrix){
     }
 }
 
-std::vector< std::vector<int>> Scene::readPPM(){
+std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
 	std::ifstream file("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/assets/maps/testRotation.ppm", std::ios::in);
 	//try{
 		if(!file){
@@ -54,19 +54,19 @@ std::vector< std::vector<int>> Scene::readPPM(){
 	//catch (const std::exception &e){
 	//	std::cerr << e.what() << std::endl;
 	//}
-	int largeur, hauteur;
+	int length, height;
 	std::string linePass;
 	getline(file, linePass);
 	getline(file, linePass);
-	file >> largeur >> hauteur;
-	std::cout<<largeur<<"x"<<hauteur<<std::endl;
+	file >> length >> height;
+	std::cout<<length<<"x"<<height<<std::endl;
 
-	std::vector< std::vector< std::vector<int>>> grid(hauteur, std::vector<int>(largeur), std::vector<std::vector<int>>(3));
+	std::vector< std::vector< std::vector<int>>> grid(height, std::vector<std::vector<int>>(length, std::vector<int>(3)));
 
 	getline(file, linePass);
 	int R,G,B;
-	for (int i=0; i<hauteur; i++){
-		for (int j=0; j<largeur; j++){
+	for (int i=0; i<height; i++){
+		for (int j=0; j<length; j++){
 			getline(file, linePass);
 			file >> R;
 			getline(file, linePass);
