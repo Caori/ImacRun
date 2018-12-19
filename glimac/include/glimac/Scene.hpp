@@ -6,6 +6,7 @@
 #include <glimac/Object.hpp>
 #include <glimac/Ground.hpp>
 #include <glimac/TrackballCamera.hpp>
+#include <glimac/Personnage.hpp>
 
 namespace glimac {
 
@@ -21,10 +22,8 @@ class Scene{
 		Sphere _sphere;
 		glm::mat4 _rotationMatrix;
 
-	private:
 		std::vector< std::vector< std::vector<int>>> _grid;
 
-	public:
 		//Constructeur et destructeurs
 		Scene();
 		~Scene(){}

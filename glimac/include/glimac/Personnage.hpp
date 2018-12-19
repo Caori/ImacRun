@@ -16,13 +16,17 @@ namespace glimac {
 /// \brief description...
 class Personnage : public Object {
     public:
-      glm::vec3 _position;
+      float _x,_y,_z;
       /// \return Coin
       /// \param applicationPath: description...
-      Personnage(const FilePath& applicationPath, glm::vec3 &position);
+      Personnage(const FilePath& applicationPath, float largeur);
 
       ~Personnage() {}
 
+      void moveFront(const float d){
+            _z+=d;
+            std::cout<<int(_x)<<" , "<<int(_z)<<std::endl;
+      }
       /// \return void
       /// \param i: description...
       /// \param j: description...
@@ -30,6 +34,7 @@ class Personnage : public Object {
       /// \brief Get the active camera's view matrix, build and send the matrixes
       /// to the shader, send the material data to the shader and draws a Coin.
       void draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix, /*,Camera& camera*/Cube& cube, Sphere& sphere) const;
+      void move();
 };
 
 }

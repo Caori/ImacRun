@@ -33,26 +33,26 @@ void Scene::drawScene(glm::mat4 &viewMatrix){
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
     		if (_grid[i][j][0] == 1){
-    			ground.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+    			ground.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
     		}
 			if (_grid[i][j][0] == 2){
-    			coin.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+    			coin.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
 			if ( _grid[i][j][0] == 3){
-				ark.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+				ark.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
 			if (_grid[i][j][0] == 4){
-				obstacle.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+				obstacle.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
 			if (_grid[i][j][0] == 5){
-    			wall.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+    			wall.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
     	}
     }
 }
 
 std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
-	std::ifstream file("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/assets/maps/testRotation.ppm", std::ios::in);
+	std::ifstream file("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/assets/maps/map1.ppm", std::ios::in);
 	//try{
 		if(!file){
 			//THROW_EXCEPTION("Impossible de lire le fichier test.ppm");
