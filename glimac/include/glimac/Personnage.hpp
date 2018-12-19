@@ -16,9 +16,10 @@ namespace glimac {
 /// \brief description...
 class Personnage : public Object {
     public:
+      glm::vec3 _position;
       /// \return Coin
       /// \param applicationPath: description...
-      Personnage(const FilePath& applicationPath);
+      Personnage(const FilePath& applicationPath, glm::vec3 &position);
 
       ~Personnage() {}
 

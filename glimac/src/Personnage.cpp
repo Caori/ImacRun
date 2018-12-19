@@ -13,13 +13,13 @@
 
 namespace glimac {
 
-Personnage::Personnage(const FilePath& applicationPath)
-    :Object(applicationPath){
+Personnage::Personnage(const FilePath& applicationPath, glm::vec3 &position)
+    : _position(position), Object(applicationPath){
 }
 
 void Personnage::draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const {
     //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
-    glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f)*viewMatrix;
+    glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
 
     glBindVertexArray(cube.vao);
         glm::mat4 MVMatrix = glm::translate(glm::mat4(1.0),glm::vec3(j, 0., -i))*viewMatrix;
