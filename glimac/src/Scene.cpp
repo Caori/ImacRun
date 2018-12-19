@@ -11,8 +11,8 @@
 #include <glimac/Ground.hpp>
 #include <glimac/Wall.hpp>
 #include <glimac/Coin.hpp>
-#include <glimac/Obstacle.hpp>
 #include <glimac/Ark.hpp>
+#include <glimac/Obstacle.hpp>
 #include <GL/glew.h>
 
 namespace glimac {
@@ -25,34 +25,34 @@ Scene::Scene(){
 
 
 void Scene::drawScene(glm::mat4 &viewMatrix){
-	Ground ground("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Wall wall("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Coin coin("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Obstacle obstacle("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Ark ark("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Ground ground("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp");
+	Wall wall("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp");
+	Coin coin("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp");
+	Ark ark("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp");
+	Obstacle obstacle("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/SDLtemplate.cpp");
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
-    		if (_grid[i][j] == 1){
-    			ground.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _cube, _sphere);
+    		if (_grid[i][j][0] == 1){
+    			ground.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
     		}
-			if (_grid[i][j] == 2){
-    			coin.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _cube, _sphere);
+			if (_grid[i][j][0] == 2){
+    			coin.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
-			if(_grid[i][j] == 3){
-				ark.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _cube, _sphere);
+			if ( _grid[i][j][0] == 3){
+				ark.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
-			if(_grid[i][j] == 4){
-				obstacle.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _cube, _sphere);
+			if (_grid[i][j][0] == 4){
+				obstacle.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
-			if (_grid[i][j] == 5){
-    			wall.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _cube, _sphere);
+			if (_grid[i][j][0] == 5){
+    			wall.draw(_grid.size()-i, _grid[0].size()/2-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
     	}
     }
 }
 
-std::vector< std::vector<int>> Scene::readPPM(){
-	std::ifstream file("/home/administrateur/Documents/Projet_local/ImacRun/assets/maps/bigmap.ppm", std::ios::in);
+std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
+	std::ifstream file("/home/administrateur/Téléchargements/Moves/ImacRun/assets/maps/map1.ppm", std::ios::in);
 	//try{
 		if(!file){
 			//THROW_EXCEPTION("Impossible de lire le fichier test.ppm");
@@ -62,19 +62,19 @@ std::vector< std::vector<int>> Scene::readPPM(){
 	//catch (const std::exception &e){
 	//	std::cerr << e.what() << std::endl;
 	//}
-	int largeur, hauteur;
+	int length, height;
 	std::string linePass;
 	getline(file, linePass);
 	getline(file, linePass);
-	file >> largeur >> hauteur;
-	std::cout<<largeur<<"x"<<hauteur<<std::endl;
+	file >> length >> height;
+	std::cout<<length<<"x"<<height<<std::endl;
 
-	std::vector< std::vector<int>> grid(hauteur, std::vector<int>(largeur));
+	std::vector< std::vector< std::vector<int>>> grid(height, std::vector<std::vector<int>>(length, std::vector<int>(3)));
 
 	getline(file, linePass);
 	int R,G,B;
-	for (int i=0; i<hauteur; i++){
-		for (int j=0; j<largeur; j++){
+	for (int i=0; i<height; i++){
+		for (int j=0; j<length; j++){
 			getline(file, linePass);
 			file >> R;
 			getline(file, linePass);
@@ -84,32 +84,34 @@ std::vector< std::vector<int>> Scene::readPPM(){
 			if (R==255){
 				if (G==255){
 					if (B==255){
-						grid[i][j]=1;
+						grid[i][j][0]=1;
 					}
 					else{
-						grid[i][j]=2;
+						grid[i][j][0]=2;
 					}
 				}
 				else{
-					grid[i][j]=4;
+					grid[i][j][0]=4;
+					grid[i][j][1]=4;
 				}
 			}
 			else{
 				if (G==255){
-					grid[i][j]=5;
+					grid[i][j][0]=5;
 				}
 				else{
 					if (B==255){
-						grid[i][j]=3;
+						grid[i][j][0]=3;
+						grid[i][j][2]=3;
 					}
 					else{
-						grid[i][j]=0;
+						grid[i][j][0]=0;
 					}
 				}
 			}
-			//std::cout<<grid[i][j]<<" ";
+			std::cout<<grid[i][j][0]<<" ";
 		}
-		//std::cout<<std::endl;
+		std::cout<<std::endl;
 	}
 
 	file.close();

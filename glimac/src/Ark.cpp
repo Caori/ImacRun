@@ -16,7 +16,7 @@ Ark::Ark(const FilePath& applicationPath)
 	:Object(applicationPath){
 }
 
-void Ark::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere) const {
+void Ark::draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix, Cube& cube, Sphere& sphere) const {
 	glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f)*viewMatrix;
 
 	glBindVertexArray(cube.vao);
@@ -36,7 +36,7 @@ void Ark::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere) 
         glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
         glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
         glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
-    glBindVertexArray(0);
+	glBindVertexArray(0);
 }
 
 

@@ -25,8 +25,8 @@ namespace glimac {
 
     public:
         Object(const FilePath& applicationPath)
-            : _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
-                                applicationPath.dirPath() + "shaders/normals.fs.glsl"))
+            : _Program(loadProgram("/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/shaders/3D_130.vs.glsl",
+                                "/home/administrateur/Téléchargements/Moves/ImacRun/TP_template/shaders/normals.fs.glsl"))
                                 /*applicationPath.dirPath() + "shaders/directionallight.fs.glsl")) */
             {
             _Program.use();
@@ -40,7 +40,7 @@ namespace glimac {
         }
         ~Object() {}
 
-        virtual void draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const = 0;
+        virtual void draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const = 0;
 
   };
 

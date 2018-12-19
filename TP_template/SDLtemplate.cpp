@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
      *********************************/
     Scene scene;
 
-	int largeur = scene.getLargeur()/2;
+	Personnage personnage("/chemin/ImacRun/TP_template/SDLtemplate.cpp", scene.getLargeur()/2);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -47,47 +47,70 @@ int main(int argc, char** argv) {
 
     glm::mat4 viewMatrix = glm::mat4(1.f);
 
-
     // Application loop:
     bool done = false;
+    float rotation;
     while(!done) {
+    	
         // Event loop:
         SDL_Event e;
         while(windowManager.pollEvent(e)) {
             if(e.type == SDL_QUIT) {
                 done = true; // Leave the loop after this iteration
             }
-
-            if(windowManager.isMouseButtonPressed(SDL_BUTTON_RIGHT) == true){
-                glm:: ivec2 mousePos = windowManager.getMousePosition();
-                t.rotateLeft(mousePos.x/400);
-                t.rotateUp(mousePos.y/300);
-            }
+            if(windowManager.isKeyPressed(SDLK_q) == true){
+           		personnage.moveLeft(scene._grid);
+           	}
+           	if(windowManager.isKeyPressed(SDLK_d) == true){
+           		personnage.moveRight(scene._grid);
+           	}
+           	/*
+           	if(windowManager.isKeyPressed(SDLK_LEFT) == true){
+           		rotation +=10.f;
+           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
+           		std::cout<<"rotation globale : "<<rotation<<std::endl;
+           	}
+           	if(windowManager.isKeyPressed(SDLK_RIGHT) == true){
+           		rotation -=10.f;
+           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
+           	}
+           	*/
         }
+        
 
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        t.moveFront(-0.1);
 
+        //ici check collision
+        personnage.moveFront(scene._grid);
+
+        // hole
+        int isFall = personnage.fall(scene._grid);
+        if(isFall == 1){
+            personnage._y -= 0.5;
+        }
         
-	    //***PERSO***
-        Personnage personnage("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
-        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -2));
-        personnage.draw(0, 0, viewMatrix, scene._cube, scene._sphere);
+        //personnage.moveFront(+0.01);
 
+
+        viewMatrix = t.getViewMatrix();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
+	    
 
         //transformer vue puis afficher scene***SCENE***
-        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -5+1*windowManager.getTime()));
-        //viewMatrix = glm::rotate(viewMatrix, glm::radians(5.f), glm::vec3(1, 0, 0));
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(-largeur/2, -1, 0));
-
-        float a = 800.0/600.0;
-        // glm::perspective(angle_vertical_de_vue, ratio_fenetre, near, far)
-        //projMatrix = glm::perspective(glm::radians(70.f),a,0.1f,100.f)*viewMatrix;
-
+        //viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0,1,0));
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
         scene.drawScene(viewMatrix);
+
+
+		//***PERSO***
+        //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.3, -2))*rotationMatrix;
+        personnage.draw(0, 0, viewMatrix, rotationMatrix, scene._cube, scene._sphere);
 
 
         // Update the display
