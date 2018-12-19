@@ -7,11 +7,6 @@
 namespace glimac {
 
 class Cube {
-    // Alloue et construit les données (le paramètre est la longueur de l'arête)
-    void build(GLfloat edgeLenght);
-    //envoie les données aux vao/vbo
-    void sendData();
-
     public:
         GLuint vao, vbo;
 
@@ -39,6 +34,11 @@ class Cube {
     private:
         std::vector<ShapeVertex> m_Vertices;
         GLsizei m_nVertexCount; // Nombre de sommets
+
+            // Alloue et construit les données (le paramètre est la longueur de l'arête)
+            void build(GLfloat edgeLenght);
+            //envoie les données aux vao/vbo
+            void sendData();
 };
     
 }

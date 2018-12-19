@@ -88,6 +88,7 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
 					}
 					else{
 						grid[i][j][0]=2;
+						grid[i][j][1]=2;
 					}
 				}
 				else{
@@ -98,6 +99,7 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
 			else{
 				if (G==255){
 					grid[i][j][0]=5;
+					grid[i][j][1]=5;
 				}
 				else{
 					if (B==255){
@@ -109,9 +111,9 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
 					}
 				}
 			}
-			std::cout<<grid[i][j][0]<<" ";
+			//std::cout<<grid[i][j][0]<<" ";
 		}
-		std::cout<<std::endl;
+		//std::cout<<std::endl;
 	}
 
 	file.close();

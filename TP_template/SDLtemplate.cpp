@@ -52,32 +52,63 @@ int main(int argc, char** argv) {
     bool done = false;
     float rotation;
     while(!done) {
+    	
         // Event loop:
         SDL_Event e;
         while(windowManager.pollEvent(e)) {
-            if(e.type == SDL_QUIT) {
-                done = true; // Leave the loop after this iteration
-            }
+        	switch(e.type){
+        		case SDL_QUIT:
+        			done = true; // Leave the loop after this iteration
+        			break;
 
-            if(windowManager.isKeyPressed(SDLK_q) == true){
+        		case SDL_KEYDOWN:
+        			if(windowManager.isKeyPressed(SDLK_q) == true){
+		           		personnage.moveLeft(scene._grid);
+		           	}
+		           	if(windowManager.isKeyPressed(SDLK_d) == true){
+		           		personnage.moveRight(scene._grid);
+		           	}
+		           	if(windowManager.isKeyPressed(SDLK_s) == true){
+	                    personnage._scale = 0.5;
+	                }
+	                if(windowManager.isKeyPressed(SDLK_z) == true){
+		                personnage._jump = 1;
+		            }
+	                break;
+
+	            case SDL_KEYUP:
+		           	if(e.key.keysym.sym == SDLK_s){
+	                    personnage._scale = 1.;
+	                }
+	                break;
+
+	            default:
+	            	break;	          
+            }
+           	/*
+           	if(windowManager.isKeyPressed(SDLK_LEFT) == true){
            		rotation +=10.f;
            		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
            		std::cout<<"rotation globale : "<<rotation<<std::endl;
            	}
-           	if(windowManager.isKeyPressed(SDLK_d) == true){
+           	if(windowManager.isKeyPressed(SDLK_RIGHT) == true){
            		rotation -=10.f;
            		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
            	}
+           	*/
         }
+        
 
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
 
-        t.moveFront(-0.01);
+        t.moveFront(-0.02);
 
         //ici check collision
-        personnage.moveFront(+0.01);
+        personnage.move(scene._grid);
+        //personnage.moveFront(+0.01);
+
 
         viewMatrix = t.getViewMatrix();
 
@@ -87,7 +118,7 @@ int main(int argc, char** argv) {
 
         //transformer vue puis afficher scene***SCENE***
         //viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0,1,0));
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -3.f, -5.f));
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
         scene.drawScene(viewMatrix);
 
 
