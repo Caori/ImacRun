@@ -12,6 +12,7 @@
 #include <glimac/Wall.hpp>
 #include <glimac/Coin.hpp>
 #include <glimac/Ark.hpp>
+#include <glimac/Obstacle.hpp>
 #include <GL/glew.h>
 
 namespace glimac {
@@ -28,13 +29,20 @@ void Scene::drawScene(glm::mat4 &viewMatrix){
 	Wall wall("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
 	Coin coin("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
 	Ark ark("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Obstacle obstacle("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
-    		if (_grid[i][j][0] == 1 || _grid[i][j][0] == 3 || _grid[i][j][0] == 4){
+    		if (_grid[i][j][0] == 1){
     			ground.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
     		}
 			if (_grid[i][j][0] == 2){
     			coin.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+			}
+			if ( _grid[i][j][0] == 3){
+				ark.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
+			}
+			if (_grid[i][j][0] == 4){
+				obstacle.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);
 			}
 			if (_grid[i][j][0] == 5){
     			wall.draw(_grid.size()-i, _grid[0].size()-j, viewMatrix, _rotationMatrix, _cube, _sphere);

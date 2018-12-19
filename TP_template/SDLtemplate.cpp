@@ -40,17 +40,19 @@ int main(int argc, char** argv) {
 
 	int largeur = scene.getLargeur()/2;
 
+
     glEnable(GL_DEPTH_TEST);
 
+
     // création TrackballCamera
-    TrackballCamera t;
-
-    glm::mat4 viewMatrix = glm::mat4(1.f);
+    TrackballCamera tBCamera;
 
 
+    glm::ivec2 vieillePosition = windowManager.getMousePosition();
     // Application loop:
     bool done = false;
     float rotation;
+
     while(!done) {
         // Event loop:
         SDL_Event e;
@@ -61,16 +63,40 @@ int main(int argc, char** argv) {
 
             if(windowManager.isKeyPressed(SDLK_q) == true){
            		rotation +=90.f;
+           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
            		std::cout<<"rotation globale : "<<rotation<<std::endl;
            	}
            	if(windowManager.isKeyPressed(SDLK_d) == true){
            		rotation -=90.f;
+           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
            	}
+
+           	if(windowManager.isKeyPressed(SDLK_DOWN)) {
+              tBCamera.moveFront(1);
+            }
+            if(windowManager.isKeyPressed(SDLK_UP)) {
+                tBCamera.moveFront(- 1);
+            }
+            if(windowManager.isMouseButtonPressed(SDL_BUTTON_RIGHT)) {
+              glm::ivec2 newPosition = windowManager.getMousePosition();
+              float deplacementX = vieillePosition.x - newPosition.x;
+              float deplacementY = vieillePosition.y - newPosition.y;
+              //si souris bouge horizontalement
+              if(deplacementX != 0) {
+                 tBCamera.rotateLeft(glm::radians(-0.01*deplacementX));
+               }
+              //si souris bouge verticalement
+              if(deplacementY != 0) {
+                tBCamera.rotateUp(glm::radians(-0.01*deplacementY));
+              }
+            }
+
         }
 
         /*********************************
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
+		glm::mat4 viewMatrix = tBCamera.getViewMatrix();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
@@ -78,7 +104,7 @@ int main(int argc, char** argv) {
 
         //transformer vue puis afficher scene***SCENE***
         //viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0,1,0));
-        viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.f, -1.f));
+        //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.f, -1.f));
  
         //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(-largeur/2, -1.3, -7+windowsManager.getTime()));
 
