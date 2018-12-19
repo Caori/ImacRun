@@ -10,7 +10,7 @@
 namespace glimac {
 
 class Scene{
-	private:
+	public:
 		/*
 		Light _lights[];
 		Camera _cams[];*/

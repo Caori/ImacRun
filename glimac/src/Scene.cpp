@@ -25,11 +25,11 @@ Scene::Scene(){
 
 
 void Scene::drawScene(glm::mat4 &viewMatrix){
-	Ground ground("/chemin/ImacRun/TP_template/SDLtemplate.cpp");
-	Wall wall("/chemin/ImacRun/TP_template/SDLtemplate.cpp");
-	Coin coin("/chemin/ImacRun/TP_template/SDLtemplate.cpp");
-	Obstacle obstacle("/chemin/ImacRun/TP_template/SDLtemplate.cpp");
-	Ark ark("/chemin/ImacRun/TP_template/SDLtemplate.cpp");
+	Ground ground("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Wall wall("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Coin coin("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Obstacle obstacle("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
+	Ark ark("/home/administrateur/Documents/Projet_local/ImacRun/TP_template/SDLtemplate.cpp");
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
     		if (_grid[i][j] == 1){
