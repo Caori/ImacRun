@@ -16,7 +16,7 @@ Obstacle::Obstacle(const FilePath& applicationPath)
     :Object(applicationPath){
   }
 
-void Obstacle::draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix, Cube& cube, Sphere& sphere) const {
+void Obstacle::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere) const {
 	glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
 
 	glBindVertexArray(cube.vao);

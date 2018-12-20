@@ -7,6 +7,7 @@
 #include <glimac/Ground.hpp>
 #include <glimac/TrackballCamera.hpp>
 #include <glimac/Personnage.hpp>
+#include <string>
 
 namespace glimac {
 
@@ -15,12 +16,13 @@ class Scene{
 		/*
 		Light _lights[];
 		Camera _cams[];*/
-		TrackballCamera _trackCam;
+		//TrackballCamera _trackCam;
 
 		//std::vector<Object*> _objects;
 		Cube _cube;
 		Sphere _sphere;
-		glm::mat4 _rotationMatrix;
+		int _posX, _posZ;
+		std::string _direction;
 
 		std::vector< std::vector< std::vector<int>>> _grid;
 

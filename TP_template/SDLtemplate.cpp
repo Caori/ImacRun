@@ -31,8 +31,6 @@ int main(int argc, char** argv) {
     std::cout << "GLEW Version : " << glewGetString(GLEW_VERSION) << std::endl;
 
 
-
-    
     /*********************************
      * HERE SHOULD COME THE INITIALIZATION CODE
      *********************************/
@@ -50,7 +48,10 @@ int main(int argc, char** argv) {
 
     // Application loop:
     bool done = false;
-    float rotation;
+    float timeTmp;
+    bool pause = 1;
+    float speed = 0.03*pause;
+
     while(!done) {
     	
         // Event loop:
@@ -63,39 +64,54 @@ int main(int argc, char** argv) {
 
         		case SDL_KEYDOWN:
         			if(windowManager.isKeyPressed(SDLK_q) == true){
-		           		personnage.moveLeft(scene._grid);
+		           		personnage.moveLeft(scene._grid, scene._posX, scene._posZ, scene._direction);
 		           	}
 		           	if(windowManager.isKeyPressed(SDLK_d) == true){
-		           		personnage.moveRight(scene._grid);
+		           		personnage.moveRight(scene._grid, scene._posX, scene._posZ, scene._direction);
 		           	}
 		           	if(windowManager.isKeyPressed(SDLK_s) == true){
-	                    personnage._scale = 0.5;
+                        if (personnage._isCrouched == 0){
+                            timeTmp = windowManager.getTime();
+    	                    personnage._scale = 0.5;
+                            personnage._y -=0.3;
+                            personnage._isCrouched = 1;
+                        }
 	                }
 	                if(windowManager.isKeyPressed(SDLK_z) == true){
 		                personnage._jump = 1;
 		            }
-	                break;
-
-	            case SDL_KEYUP:
-		           	if(e.key.keysym.sym == SDLK_s){
-	                    personnage._scale = 1.;
-	                }
+                    if(windowManager.isKeyPressed(SDLK_SPACE) == true){
+                        if (pause==0){pause=1;}
+                        else {pause=0;}
+                        speed = 0.03*pause;
+                    }
 	                break;
 
 	            default:
 	            	break;	          
             }
-           	/*
+           	
+           	if(windowManager.isKeyPressed(SDLK_UP) == true){
+           		scene._posZ+=10;
+           	}
+            if(windowManager.isKeyPressed(SDLK_DOWN) == true){
+                scene._posZ-=10;
+            }
            	if(windowManager.isKeyPressed(SDLK_LEFT) == true){
-           		rotation +=10.f;
-           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
-           		std::cout<<"rotation globale : "<<rotation<<std::endl;
+           		scene._posX-=10;
            	}
-           	if(windowManager.isKeyPressed(SDLK_RIGHT) == true){
-           		rotation -=10.f;
-           		scene._rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
-           	}
-           	*/
+            if(windowManager.isKeyPressed(SDLK_RIGHT) == true){
+                scene._posX+=10;
+            }
+           	
+        }
+
+        if (personnage._isCrouched){
+            if (windowManager.getTime() - timeTmp > 0.65){
+                personnage._isCrouched = 0;
+                personnage._scale = 1.;
+                personnage._y +=0.3;
+            }
         }
         
 
@@ -103,28 +119,38 @@ int main(int argc, char** argv) {
          * HERE SHOULD COME THE RENDERING CODE
          *********************************/
 
-        t.moveFront(-0.02);
+        if (scene._direction == "NORD"){
+            t.moveFront(-speed);
+        }
+        if (scene._direction == "SUD"){
+            t.moveFront(+speed);
+        }
+        if (scene._direction == "OUEST"){
+            t.moveFront(+speed);
+        }
+        if (scene._direction == "EST"){
+            t.moveFront(-speed);
+        }
 
         //ici check collision
-        personnage.move(scene._grid);
+        personnage.move(scene._grid, speed, scene._direction);
         //personnage.moveFront(+0.01);
 
 
         viewMatrix = t.getViewMatrix();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.f), glm::radians(rotation), glm::vec3(0,1,0));
-	    
+       
 
-        //transformer vue puis afficher scene***SCENE***
-        //viewMatrix = glm::rotate(viewMatrix, glm::radians(rotation), glm::vec3(0,1,0));
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
+        //transformer vue
+       viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
+     
+        //***PERSO***
+        personnage.draw(0, 0, viewMatrix, scene._cube, scene._sphere);
+
+
+        //***SCENE***
         scene.drawScene(viewMatrix);
-
-
-		//***PERSO***
-        //viewMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -0.3, -2))*rotationMatrix;
-        personnage.draw(0, 0, viewMatrix, rotationMatrix, scene._cube, scene._sphere);
 
 
         // Update the display

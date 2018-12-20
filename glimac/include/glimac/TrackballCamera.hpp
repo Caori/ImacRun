@@ -8,6 +8,7 @@ namespace glimac {
 
   private:
     float m_fDistance; //distance par rapport au centre de la scène
+    float m_fLeftDistance;
     float m_fAngleX; //angle fait par la caméra autour de l'axe x (haut bas)
     float m_fAngleY; //angle fait par caméra autour de l'axe y (gauche droite)
 
@@ -16,6 +17,7 @@ namespace glimac {
     ~TrackballCamera() {}
 
     void moveFront(float delta);
+    void moveLeft(float delta);
 
     void rotateLeft(float degrees);
 

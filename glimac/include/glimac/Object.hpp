@@ -40,7 +40,7 @@ namespace glimac {
         }
         ~Object() {}
 
-        virtual void draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const = 0;
+        virtual void draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const = 0;
 
   };
 

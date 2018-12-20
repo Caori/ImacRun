@@ -28,7 +28,7 @@ namespace glimac {
     /// \param camera: description...
     /// \brief Get the active camera's view matrix, build and send the matrixes
     /// to the shader, send the material data to the shader and draws a Ark.
-    void draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix /*,Camera& camera*/, Cube& cube, Sphere& sphere) const;
+    void draw(int i, int j, glm::mat4 &viewMatrix/*,Camera& camera*/, Cube& cube, Sphere& sphere) const;
   };
 
 }
