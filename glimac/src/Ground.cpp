@@ -13,11 +13,11 @@
 
 namespace glimac {
 
-Ground::Ground(const FilePath& applicationPath)
-    :Object(applicationPath){
+Ground::Ground(const FilePath& applicationPath, const std::string fShader)
+    :Object(applicationPath, fShader){
 }
 
-void Ground::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const {
+void Ground::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
     //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
     glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
 

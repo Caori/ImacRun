@@ -3,20 +3,24 @@
 #include "glimac/SDLWindowManager.hpp"
 #include "glimac/TrackballCamera.hpp"
 #include <iostream>
+#include <glimac/Image.hpp>
 
 namespace glimac {
 
 Game::Game(const SDLWindowManager &window, const FilePath& applicationPath)
 	:_windowManager(window),
-	_scene("map.ppm", applicationPath), 
+	_scene("map1.ppm", applicationPath), 
 	_character(applicationPath, _scene.getWidth()/2),
-	_done(false), _pause(0), _speed(0.03)
+	_done(false), _pause(0), _speed(0.02)
 	{
         glEnable(GL_DEPTH_TEST);
 }	
 
 
 void Game::playGame(const FilePath& applicationPath){
+
+
+
 	while(!_done){
 		gameEvent();
 		_trackballCamera.move(_scene._direction, _speed);
@@ -77,12 +81,18 @@ void Game::gameEvent(){
 void Game::gameRendering(const FilePath& applicationPath){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
+
+
+
+
     glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
 
-    _character.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere);
+    _character.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
 
-    _scene.drawScene(viewMatrix, applicationPath);
+    _scene.drawScene(viewMatrix, applicationPath, _windowManager);
 
     _windowManager.swapBuffers();
 }

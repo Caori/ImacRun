@@ -20,7 +20,7 @@ Character::Character(const FilePath& applicationPath, float demiLargeur)
     :_x(demiLargeur), _xGrid(demiLargeur), _y(1.), _z(0.), _zGrid(0.), _scale(1.f), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath){
 }
 
-void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const {
+void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
     //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
     glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
     glBindVertexArray(cube.vao);

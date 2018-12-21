@@ -18,7 +18,7 @@ class Ground : public Object {
     public:
         /// \return Ground
         /// \param applicationPath: description...
-        Ground(const FilePath& applicationPath);
+        Ground(const FilePath& applicationPath, const std::string fShader);
 
         ~Ground(){}
 
@@ -28,7 +28,7 @@ class Ground : public Object {
         /// \param camera: description...
         /// \brief Get the active camera's view matrix, build and send the matrixes
         /// to the shader, send the material data to the shader and draws a Ground.
-        void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/ Cube& cube, Sphere& sphere) const;
+        void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/ Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
 
 };
 

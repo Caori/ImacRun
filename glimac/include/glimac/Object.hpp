@@ -2,31 +2,33 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <string>
 
 #include "glm.hpp"
 #include <glimac/Program.hpp>
 #include <glimac/FilePath.hpp>
 #include "glimac/Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include <glimac/SDLWindowManager.hpp>
 
 namespace glimac {
 
     class Object {
     protected:
-
         Program _Program;
         GLint uMVPMatrix;
         GLint uMVMatrix;
         GLint uNormalMatrix;
-        GLint uTexture;
         GLint uKd;
         GLint uKs;
         GLfloat uShininess;
 
     public:
-        Object(const FilePath& applicationPath)
-            : _Program(loadProgram("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/shaders/3D.vs.glsl",
-                                "/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/shaders/normals.fs.glsl"))
+        GLint uTexture;
+
+        Object(const FilePath& applicationPath, const std::string fShader = "normals.fs.glsl")
+            : _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
+                                   applicationPath.dirPath() + "shaders/" + fShader))
                                 /*applicationPath.dirPath() + "shaders/directionallight.fs.glsl")) */
             {
             _Program.use();
@@ -40,7 +42,7 @@ namespace glimac {
         }
         ~Object() {}
 
-        virtual void draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const = 0;
+        virtual void draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const = 0;
 
   };
 

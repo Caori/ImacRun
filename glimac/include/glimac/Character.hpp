@@ -38,7 +38,7 @@ class Character : public Object {
       /// \param camera: description...
       /// \brief Get the active camera's view matrix, build and send the matrixes
       /// to the shader, send the material data to the shader and draws a Coin.
-      void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/Cube& cube, Sphere& sphere) const;
+      void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
       void move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position);
       void moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position);
       void jump(const std::vector< std::vector< std::vector<int>>> &grid);

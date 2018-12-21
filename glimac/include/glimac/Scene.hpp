@@ -37,7 +37,7 @@ class Scene{
 			return _grid[0].size();
 		}
 
-		void drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath );
+		void drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath, SDLWindowManager &windowManager );
 
 };
 

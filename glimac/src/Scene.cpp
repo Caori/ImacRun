@@ -16,8 +16,13 @@
 #include <GL/glew.h>
 #include <string>
 #include <glimac/Light.hpp>
+#include <glimac/Image.hpp>
 
 namespace glimac {
+
+	const GLuint VERTEX_ATTR_POSITION = 0;
+const GLuint VERTEX_ATTR_TEXTURE = 2;
+const GLuint VERTEX_ATTR_NORM = 1;
 
 Scene::Scene(const std::string &map, const FilePath& applicationPath)
 	:_posX(0), _posZ(0), _direction("NORD"){
@@ -26,31 +31,30 @@ Scene::Scene(const std::string &map, const FilePath& applicationPath)
 
 }
 
-void Scene::drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath){
-	Ground ground(applicationPath);
+void Scene::drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath, SDLWindowManager &windowManager){
+	Ground ground(applicationPath, "normals.fs.glsl");
 	Wall wall(applicationPath);
 	Coin coin(applicationPath);
 	Ark ark(applicationPath);
 	Obstacle obstacle(applicationPath);
 
 	//light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
-
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
     		if (_grid[i][j][0] == 1){
-    			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere);
+    			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
     		}
 			if (_grid[i][j][0] == 2){
-    			coin.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere);
+    			coin.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 			}
 			if ( _grid[i][j][0] == 3){
-				ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere);
+				ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 			}
 			if (_grid[i][j][0] == 4){
-				obstacle.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere);
+				obstacle.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 			}
 			if (_grid[i][j][0] == 5){
-    			wall.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere);
+    			wall.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 			}
     	}
     }

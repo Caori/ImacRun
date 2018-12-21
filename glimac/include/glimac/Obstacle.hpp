@@ -28,7 +28,7 @@ class Obstacle : public Object {
         /// \param camera: description...
         /// \brief Get the active camera's view matrix, build and send the matrixes
         /// to the shader, send the material data to the shader and draws a Obstacle.
-        void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/ Cube& cube, Sphere& sphere) const;
+        void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/ Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
 };
 
 }

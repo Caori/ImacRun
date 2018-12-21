@@ -30,10 +30,5 @@ int main(int argc, char** argv) {
 
 	//dans la fonction startGame (cf. Gamemanager.cpp)  si bool pause ==1 --> afficher pause
 
-
-
-
-
-
     return EXIT_SUCCESS;
 }
