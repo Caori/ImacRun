@@ -16,9 +16,10 @@ namespace glimac {
 /// \brief description...
 class Coin : public Object {
     public:
+      int _value;
       /// \return Coin
       /// \param applicationPath: description...
-      Coin(const FilePath& applicationPath);
+      Coin(const FilePath& applicationPath, int value);
 
       ~Coin() {}
 
@@ -30,5 +31,6 @@ class Coin : public Object {
       /// to the shader, send the material data to the shader and draws a Coin.
       void draw(int i, int j, glm::mat4 &viewMatrix /*,Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
 };
+
 
 }

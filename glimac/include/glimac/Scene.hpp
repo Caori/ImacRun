@@ -19,7 +19,6 @@ class Scene{
 		Light _lights[];
 		Camera _cams[];*/
 		//TrackballCamera _trackCam;
-
 		Cube _cube;
 		Sphere _sphere;
 		int _posX, _posZ;

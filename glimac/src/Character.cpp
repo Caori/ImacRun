@@ -16,8 +16,8 @@
 
 namespace glimac {
 
-Character::Character(const FilePath& applicationPath, float demiLargeur)
-    :_x(demiLargeur), _xGrid(demiLargeur), _y(1.), _z(0.), _zGrid(0.), _scale(1.f), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath){
+Character::Character(const FilePath& applicationPath, float demiLargeur, float y, float z, float scale)
+    :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath){
 }
 
 void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
@@ -25,7 +25,7 @@ void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube
     glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
     glBindVertexArray(cube.vao);
         glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
-        MVMatrix = glm::scale(MVMatrix, glm::vec3(0.7, _scale*1.5, 0.6));
+        MVMatrix = glm::scale(MVMatrix, glm::vec3(0.5, _scale*1.5, 0.6));
         glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
         glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
         glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
@@ -46,7 +46,12 @@ void Character::move(std::vector< std::vector< std::vector<int>>> &grid, float s
 
 }
 
-void Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+int Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+    if (_z>116.){
+        std::cout<<"WIN"<<std::endl;
+        return 0;
+    }
+
     int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y];
     int upblocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y+1];
     if ((blocType != 4 && blocType != 5 && blocType != 3)&&(upblocType != 3)||_jump==3){
@@ -65,13 +70,11 @@ void Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, fl
         }
 
         if (blocType == 2){
-            _score += 1;
+            _score += grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][2]+1;
             std::cout<<"score :"<<_score<<std::endl;
             grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][0]=1;
             grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][1]=1;
         }
-
-
     }
     else{
         if (upblocType==3 || blocType==3){
@@ -95,6 +98,7 @@ void Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, fl
             }
         }
     }
+    return 1;
 }
 
 void Character::jump(const std::vector< std::vector< std::vector<int>>> &grid){
@@ -110,7 +114,7 @@ void Character::jump(const std::vector< std::vector< std::vector<int>>> &grid){
         }
         else{
             //if(upblocType !=3){
-                _y+=0.05;
+                _y+=0.04;
             //}
         } 
     }     
@@ -120,7 +124,7 @@ void Character::jump(const std::vector< std::vector< std::vector<int>>> &grid){
         }
         else{
             if(downblocType != 4){
-                _y-=0.05;    
+                _y-=0.04;    
             }
         }
     }                                                         
@@ -158,7 +162,7 @@ void Character::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, int
     else{
         if (blocType != 5 && blocType != 3 && blocType != 4){
             if (blocType == 2){
-                _score += 1;
+                _score += grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+1][2]+1;
                 std::cout<<"score :"<<_score<<std::endl;
                 grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+1][0]=1;
                 grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+1][1]=1;
@@ -198,7 +202,6 @@ void Character::moveRight(std::vector< std::vector< std::vector<int>>> &grid, in
         if (position == "OUEST"){
             position = "NORD";
         }
-        std::cout<<_x<<" "<<_z<<" grid:"<<_xGrid<<" "<<_zGrid<<std::endl;
         posX =-(int(_z)-int(_xGrid))-1;
         posZ =(int(50)-int(_z))-2; 
         float tmp = _xGrid;
@@ -211,7 +214,7 @@ void Character::moveRight(std::vector< std::vector< std::vector<int>>> &grid, in
     else{
         if (blocType != 5 && blocType != 3 && blocType != 4){
             if (blocType == 2){
-                _score += 1;
+                _score += grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-1][2]+1;
                 std::cout<<"score :"<<_score<<std::endl;
                 grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-1][0]=1;
                 grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-1][1]=1;

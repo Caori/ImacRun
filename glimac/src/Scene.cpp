@@ -20,21 +20,18 @@
 
 namespace glimac {
 
-	const GLuint VERTEX_ATTR_POSITION = 0;
-const GLuint VERTEX_ATTR_TEXTURE = 2;
-const GLuint VERTEX_ATTR_NORM = 1;
-
 Scene::Scene(const std::string &map, const FilePath& applicationPath)
 	:_posX(0), _posZ(0), _direction("NORD"){
 	//camera, lights à faire
 	_grid = readPPM(map, applicationPath);
-
 }
 
 void Scene::drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath, SDLWindowManager &windowManager){
 	Ground ground(applicationPath, "normals.fs.glsl");
 	Wall wall(applicationPath);
-	Coin coin(applicationPath);
+	Coin coin1(applicationPath, 1);
+	Coin coin2(applicationPath, 2);
+	Coin coin3(applicationPath, 3);
 	Ark ark(applicationPath);
 	Obstacle obstacle(applicationPath);
 
@@ -45,8 +42,15 @@ void Scene::drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath, SD
     			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
     		}
 			if (_grid[i][j][0] == 2){
-    			coin.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
-			}
+				switch(_grid[i][j][2]){
+					case 0:
+						coin1.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					case 1:
+						coin2.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					case 2:
+						coin3.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);			
+				}
+    		}
 			if ( _grid[i][j][0] == 3){
 				ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 			}
@@ -78,6 +82,8 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &m
 	file >> length >> height;
 	std::cout<<length<<"x"<<height<<std::endl;
 
+	int coinType=0;
+
 	std::vector< std::vector< std::vector<int>>> grid(height, std::vector<std::vector<int>>(length, std::vector<int>(3)));
 
 	getline(file, linePass);
@@ -98,6 +104,22 @@ std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &m
 					else{
 						grid[i][j][0]=2;
 						grid[i][j][1]=2;
+						switch(coinType){
+							case 0: 
+								grid[i][j][2]=0;
+								coinType++;
+								break;
+							case 1: 
+								grid[i][j][2]=1;
+								coinType++;
+								break;
+							case 2: 
+								grid[i][j][2]=2;
+								coinType=0;
+								break;
+							default:
+								break;
+						}
 					}
 				}
 				else{

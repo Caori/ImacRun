@@ -28,7 +28,7 @@ class Character : public Object {
 
 
       /// \param applicationPath: description...
-      Character(const FilePath& applicationPath, float demiLargeur);
+      Character(const FilePath& applicationPath, float demiLargeur, float y=0, float z=0., float _scale=1.);
 
       ~Character() {}
 
@@ -40,7 +40,8 @@ class Character : public Object {
       /// to the shader, send the material data to the shader and draws a Coin.
       void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
       void move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position);
-      void moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position);
+      //int moveFront : renvoie 0 si on est au bout de la map
+      int moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position);
       void jump(const std::vector< std::vector< std::vector<int>>> &grid);
       void moveLeft(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position);
       void moveRight(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position);

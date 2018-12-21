@@ -11,6 +11,7 @@ class Game{
 		SDLWindowManager _windowManager;
 		Scene _scene;
 		Character _character;
+		Character _foe1,_foe2, _foe3;
 		TrackballCamera _trackballCamera;
 		bool _done;
 		bool _pause;

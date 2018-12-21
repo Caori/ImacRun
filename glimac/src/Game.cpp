@@ -4,6 +4,7 @@
 #include "glimac/TrackballCamera.hpp"
 #include <iostream>
 #include <glimac/Image.hpp>
+#include <cmath>
 
 namespace glimac {
 
@@ -11,6 +12,10 @@ Game::Game(const SDLWindowManager &window, const FilePath& applicationPath)
 	:_windowManager(window),
 	_scene("map1.ppm", applicationPath), 
 	_character(applicationPath, _scene.getWidth()/2),
+    // les 3 nombres en + : décalage hauteur, profondeur et scale pour les ennemis
+    _foe1(applicationPath, _scene.getWidth()/2+1, 0.3, -6., 0.6),
+    _foe2(applicationPath, _scene.getWidth()/2,  0.3, -6.,  0.7),
+    _foe3(applicationPath, _scene.getWidth()/2-1, 0.3, -6.,  0.65),
 	_done(false), _pause(0), _speed(0.02)
 	{
         glEnable(GL_DEPTH_TEST);
@@ -25,7 +30,9 @@ void Game::playGame(const FilePath& applicationPath){
 		gameEvent();
 		_trackballCamera.move(_scene._direction, _speed);
         _character.move(_scene._grid, _speed, _scene._direction);
-
+        _foe1._z+=_speed+0.003*cos(_windowManager.getTime());
+        _foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
+        _foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
         gameRendering(applicationPath);
 	}
 }
@@ -81,16 +88,12 @@ void Game::gameEvent(){
 void Game::gameRendering(const FilePath& applicationPath){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
-
-
-
-
     glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
-
     _character.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
+    _foe1.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
+    _foe2.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
+    _foe3.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
 
     _scene.drawScene(viewMatrix, applicationPath, _windowManager);
 
