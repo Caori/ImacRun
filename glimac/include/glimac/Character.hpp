@@ -15,7 +15,7 @@
 namespace glimac {
 /// \class Coin
 /// \brief description...
-class Personnage : public Object {
+class Character : public Object {
     public:
       float _x,_y,_z;
       float _xGrid, _zGrid;
@@ -28,9 +28,9 @@ class Personnage : public Object {
 
 
       /// \param applicationPath: description...
-      Personnage(const FilePath& applicationPath, float demiLargeur);
+      Character(const FilePath& applicationPath, float demiLargeur);
 
-      ~Personnage() {}
+      ~Character() {}
 
       /// \return void
       /// \param i: description...

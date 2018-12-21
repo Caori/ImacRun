@@ -14,22 +14,27 @@
 #include <glimac/Ark.hpp>
 #include <glimac/Obstacle.hpp>
 #include <GL/glew.h>
+#include <string>
+#include <glimac/Light.hpp>
 
 namespace glimac {
 
-Scene::Scene()
+Scene::Scene(const std::string &map, const FilePath& applicationPath)
 	:_posX(0), _posZ(0), _direction("NORD"){
 	//camera, lights à faire
-	_grid = readPPM();
+	_grid = readPPM(map, applicationPath);
 
 }
 
-void Scene::drawScene(glm::mat4 &viewMatrix){
-	Ground ground("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Wall wall("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Coin coin("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Ark ark("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
-	Obstacle obstacle("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/TP_template/SDLtemplate.cpp");
+void Scene::drawScene(glm::mat4 &viewMatrix, const FilePath& applicationPath){
+	Ground ground(applicationPath);
+	Wall wall(applicationPath);
+	Coin coin(applicationPath);
+	Ark ark(applicationPath);
+	Obstacle obstacle(applicationPath);
+
+	//light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
+
 	for (int i=0; i<_grid.size(); i++){
     	for (int j=0; j<_grid[0].size(); j++){
     		if (_grid[i][j][0] == 1){
@@ -51,12 +56,12 @@ void Scene::drawScene(glm::mat4 &viewMatrix){
     }
 }
 
-std::vector< std::vector< std::vector<int>>> Scene::readPPM(){
-	std::ifstream file("/home/jarcet/Bureau/Projet OpenGL/Projet_SI_local/ImacRun/assets/maps/map.ppm", std::ios::in);
+std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &map, const FilePath& applicationPath){
+	std::ifstream file(applicationPath.dirPath() + "../../ImacRun/assets/maps/"+map, std::ios::in);
 	//try{
 		if(!file){
 			//THROW_EXCEPTION("Impossible de lire le fichier test.ppm");
-			std::cout<<"Impossible de lire le fichier test.ppm"<<std::endl;
+			std::cout<<"Impossible de lire le fichier "<<map<<std::endl;
 		}
 	//}
 	//catch (const std::exception &e){

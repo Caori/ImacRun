@@ -6,7 +6,7 @@
 #include <string>
 #include <glimac/SDLWindowManager.hpp>
 #include "glimac/common.hpp"
-#include "glimac/Personnage.hpp"
+#include "glimac/Character.hpp"
 #include "glimac/Cube.hpp"
 #include "glimac/Object.hpp"
 #include "glimac/Sphere.hpp"
@@ -16,15 +16,15 @@
 
 namespace glimac {
 
-Personnage::Personnage(const FilePath& applicationPath, float demiLargeur)
+Character::Character(const FilePath& applicationPath, float demiLargeur)
     :_x(demiLargeur), _xGrid(demiLargeur), _y(1.), _z(0.), _zGrid(0.), _scale(1.f), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath){
 }
 
-void Personnage::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const {
+void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere) const {
     //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
     glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
     glBindVertexArray(cube.vao);
-        glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)));
+        glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
         MVMatrix = glm::scale(MVMatrix, glm::vec3(0.7, _scale*1.5, 0.6));
         glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
         glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
@@ -34,7 +34,7 @@ void Personnage::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cub
     glBindVertexArray(0);
 }
 
-void Personnage::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+void Character::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
     fallTest(grid);
     if (_isFalling){
         _y -= 0.08;
@@ -46,7 +46,7 @@ void Personnage::move(std::vector< std::vector< std::vector<int>>> &grid, float 
 
 }
 
-void Personnage::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+void Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
     int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y];
     int upblocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y+1];
     if ((blocType != 4 && blocType != 5 && blocType != 3)&&(upblocType != 3)||_jump==3){
@@ -97,7 +97,7 @@ void Personnage::moveFront(std::vector< std::vector< std::vector<int>>> &grid, f
     }
 }
 
-void Personnage::jump(const std::vector< std::vector< std::vector<int>>> &grid){
+void Character::jump(const std::vector< std::vector< std::vector<int>>> &grid){
     int upblocType = grid[grid.size()-_zGrid][grid[0].size()-int(_xGrid)][int(_y)+1];
     int downblocType = grid[grid.size()-_zGrid][grid[0].size()-(_xGrid)][int(_y)];
     //std::cout<<downblocType<<std::endl;
@@ -128,7 +128,7 @@ void Personnage::jump(const std::vector< std::vector< std::vector<int>>> &grid){
 
 
 
-void Personnage::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
+void Character::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
     int leftPath = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+4][0];
     int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+1][0];
     //pour tourner a gauche
@@ -146,11 +146,10 @@ void Personnage::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, in
         if (position == "EST"){
             position = "NORD";
         }
-        std::cout<<_x<<" "<<_z<<" grid:"<<_xGrid<<" "<<_zGrid<<std::endl;
         posX =int(_z)-int(_xGrid)+2;
         posZ =int(50)-int(_z)-1; 
         int tmp = _zGrid;
-        _zGrid = 99-int(_xGrid)+1;
+        _zGrid = 99-int(_xGrid);
         _xGrid = tmp+2;
         //posX = (99-_z);
         //posZ = 99-_x;
@@ -181,7 +180,7 @@ void Personnage::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, in
     }
 }
 
-void Personnage::moveRight(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
+void Character::moveRight(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
     int rightPath = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-4][0];
     int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-1][0]; 
     //pour tourner a droite
@@ -234,7 +233,7 @@ void Personnage::moveRight(std::vector< std::vector< std::vector<int>>> &grid, i
     }
 }
 
-void Personnage::fallTest(const std::vector< std::vector< std::vector<int>>> &grid){
+void Character::fallTest(const std::vector< std::vector< std::vector<int>>> &grid){
     int blocType = grid[grid.size()-_zGrid-1][grid[0].size() - _xGrid][0];
     if (blocType == 0 && _jump==0){
         if (_isFalling == 0){
