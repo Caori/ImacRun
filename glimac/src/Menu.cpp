@@ -20,15 +20,11 @@ Vertex2DUV::Vertex2DUV(glm::vec2 &position,glm::vec2 &coordtexture)
 
 Menu::~Menu(){}
 
-void Menu::initializeMenu(SDLWindowManager &_windowManager, const FilePath& filepath){
-    GLint uModelMatrixLocation = glGetUniformLocation(_Program.getGLId(), "uModelMatrix");
-    GLint uModelColor = glGetUniformLocation(_Program.getGLId(),"uColor");
-    GLint uModelTexture1 = glGetUniformLocation(_Program.getGLId(),"uTexture1");
-    GLint uModelTexture2 = glGetUniformLocation(_Program.getGLId(),"uTexture2");
+GLuint Menu::initializeMenu(){
+    // vertices
+    Vertex2DUV sommet1, sommet2, sommet3;
 
-    Vertex2DUV sommet1, sommet2, sommet3, sommet4, sommet5, sommet6;
-
-     GLuint vbo, vbo2;
+     GLuint vbo;
      glGenBuffers(1,&vbo);
      glBindBuffer(GL_ARRAY_BUFFER,vbo);
      
@@ -67,9 +63,15 @@ void Menu::initializeMenu(SDLWindowManager &_windowManager, const FilePath& file
      glBindBuffer(GL_ARRAY_BUFFER,0);
      glBindVertexArray(0);
 
+     return vao;
+}
 
-     glGenBuffers(1,&vbo2);
-     glBindBuffer(GL_ARRAY_BUFFER,vbo2);
+GLuint Menu::initializeMenu2(){
+    Vertex2DUV sommet4, sommet5, sommet6;
+
+    GLuint vbo2;
+    glGenBuffers(1,&vbo2);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo2);
 
      // second triangle
      sommet4.m_position.x=-1;
@@ -104,99 +106,76 @@ void Menu::initializeMenu(SDLWindowManager &_windowManager, const FilePath& file
      glBindBuffer(GL_ARRAY_BUFFER,0);
      glBindVertexArray(0);
 
-	// load menu background
-	std::unique_ptr<Image> menuBackground, menuBackground2;
+     return vao2;
+}
+
+GLuint Menu::loadTexture(const FilePath& filepath){
+    // load menu background
+    std::unique_ptr<Image> menuBackground;
     menuBackground = loadImage(filepath);
-    menuBackground2 = loadImage(filepath);
 
     // stock textures in array
-    GLuint texture[2];
-    glGenTextures(2, texture);
+    GLuint texture[1];
+    glGenTextures(1, texture);
 
     // bind first texture
     glBindTexture(GL_TEXTURE_2D, texture[0]);
-    	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,menuBackground->getWidth(), menuBackground->getHeight(),0,GL_RGBA,GL_FLOAT,menuBackground->getPixels());
-    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D,0);
-
-	 // bind second texture
-    glBindTexture(GL_TEXTURE_2D, texture[1]);
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,menuBackground2->getWidth(), menuBackground2->getHeight(),0,GL_RGBA,GL_FLOAT,menuBackground2->getPixels());
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,menuBackground->getWidth(), menuBackground->getHeight(),0,GL_RGBA,GL_FLOAT,menuBackground->getPixels());
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D,0);
 
-   bool done = false;
-    while(!done){
-        // Event loop:
-        SDL_Event e;
-        while(_windowManager.pollEvent(e)) {
-            if(e.type == SDL_QUIT) {
-                done = true; // Leave the loop after this iteration
-            }
+    return *texture;
+}
 
-            // interaction avec les boutons
-            if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
-                glm::ivec2 mousePosition = _windowManager.getMousePosition();
-                float mousePosX = mousePosition.x;
-                float mousePosY = mousePosition.y;
-                // bouton width : 400 px
-                if(mousePosX >= 200 && mousePosX <= 600){
-                    // leave
-                    if(mousePosY >= 250 && mousePosY <= 350){
-                        done = true;
-                    }
-                    // play
-                    if( mousePosY >= 120 && mousePosY <= 220){
-                        std::cout << "Let's go !" << std::endl;
-                    }
-                }
-            }
-        }
-        // rendering
-        //clean the window
-        glClear(GL_COLOR_BUFFER_BIT);
+void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture){
+    GLint uModelMatrixLocation = glGetUniformLocation(_Program.getGLId(), "uModelMatrix");
+    GLint uModelColor = glGetUniformLocation(_Program.getGLId(),"uColor");
+    GLint uModelTexture1 = glGetUniformLocation(_Program.getGLId(),"uTexture1");
+    GLint uModelTexture2 = glGetUniformLocation(_Program.getGLId(),"uTexture2");
+    
+    GLuint vao = initializeMenu();
+    GLuint vao2 = initializeMenu2();
 
-        glUniform1i(uModelTexture1, 0);
-        glUniform1i(uModelTexture2, 1);
+    // rendering
+    //clean the window
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,texture[0]);
-            //Triangle 1
-            glm::mat3 matTriangle1 = glm::mat3(1.f);
-            glm::vec3 colorTriangle = glm::vec3(0,1,0);
-            glUniformMatrix3fv(uModelMatrixLocation,1,GL_FALSE,glm::value_ptr(matTriangle1));
-            glUniform3fv(uModelColor,1, glm::value_ptr(colorTriangle));
-            //draw triangle
-            glBindVertexArray(vao);
-                glDrawArrays(GL_TRIANGLES,0,3);
-            glBindVertexArray(0);
+    glUniform1i(uModelTexture1, 0);
+    glUniform1i(uModelTexture2, 1);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,texture[0]);
+        //Triangle 1
+        glm::mat3 matTriangle1 = glm::mat3(1.f);
+        glm::vec3 colorTriangle = glm::vec3(0,1,0);
+        glUniformMatrix3fv(uModelMatrixLocation,1,GL_FALSE,glm::value_ptr(matTriangle1));
+        glUniform3fv(uModelColor,1, glm::value_ptr(colorTriangle));
+        //draw triangle
+        glBindVertexArray(vao);
+            glDrawArrays(GL_TRIANGLES,0,3);
+        glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE0
 
 
-        // texture triangle 2
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D,texture[1]);
-             // Triangle 2
-            glm::mat3 matTriangle2 = glm::mat3(1.f);
-            colorTriangle = glm::vec3(1,0,0);
-            
-            glUniformMatrix3fv(uModelMatrixLocation,1,GL_FALSE,glm::value_ptr(matTriangle2));
-            glUniform3fv(uModelColor,1,glm::value_ptr(colorTriangle));
-            //Dessiner le triangle
-            glBindVertexArray(vao2);
-                glDrawArrays(GL_TRIANGLES,0,3);
-            glBindVertexArray(0);
+    // texture triangle 2
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D,texture[0]);
+        // Triangle 2
+        glm::mat3 matTriangle2 = glm::mat3(1.f);
+        colorTriangle = glm::vec3(1,0,0);
+                
+        glUniformMatrix3fv(uModelMatrixLocation,1,GL_FALSE,glm::value_ptr(matTriangle2));
+        glUniform3fv(uModelColor,1,glm::value_ptr(colorTriangle));
 
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE1
+        glBindVertexArray(vao2);
+            glDrawArrays(GL_TRIANGLES,0,3);
+        glBindVertexArray(0);
 
-        // Update the display
-        _windowManager.swapBuffers();
-    }
-    glDeleteTextures(2,(GLuint*)(&texture));
-    }
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE1
+}
+
 }

@@ -24,8 +24,39 @@ int main(int argc, char** argv) {
 
 	Menu mainMenu("/home/administrateur/Documents/Projet/ImacRun/TP_menu/test.cpp");
 
+	// initialize textures
+	GLuint texture = mainMenu.loadTexture("/home/administrateur/Documents/Projet/ImacRun/assets/menu/Menu-player.png");
 
-	mainMenu.initializeMenu(windowManager,"/home/administrateur/Documents/Projet/ImacRun/assets/menu/Menu-player.png");
+	bool done = false;
+	while(!done){
+        // Event loop:
+        SDL_Event e;
+        while(windowManager.pollEvent(e)) {
+            if(e.type == SDL_QUIT) {
+                done = true; // Leave the loop after this iteration
+            }
 
+            // interaction avec les boutons
+            if(windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
+                glm::ivec2 mousePosition = windowManager.getMousePosition();
+                float mousePosX = mousePosition.x;
+                float mousePosY = mousePosition.y;
+                // bouton width : 400 px
+                if(mousePosX >= 200 && mousePosX <= 600){
+                    // leave
+                    if(mousePosY >= 250 && mousePosY <= 350){
+                        done = true;
+                    }
+                    // play
+                    if(mousePosY >= 120 && mousePosY <= 220){
+                        std::cout << "Let's go !" << std::endl;
+                    }
+                }
+            }
+        }
+        mainMenu.displayMenu(windowManager, &texture);
+        windowManager.swapBuffers();
+    }
+    glDeleteTextures(1,(GLuint*)(&texture));
 	return EXIT_SUCCESS;
 }

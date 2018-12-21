@@ -50,7 +50,10 @@ namespace glimac{
 			~Menu();
 			
 			// display the menu in parameter
-			void initializeMenu(SDLWindowManager &_windowManager, const FilePath& filepath);
+			GLuint initializeMenu();
+			GLuint initializeMenu2();
+			GLuint loadTexture(const FilePath& filepath);
+			void displayMenu(SDLWindowManager &_windowManager, GLuint *texture);
 	};
 
 }
