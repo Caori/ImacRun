@@ -16,10 +16,10 @@
 namespace glimac {
 
     Character::Character(const FilePath& applicationPath, float demiLargeur, float y, float z, float scale)
-        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath){
+        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath) {
     }
 
-    void Character::draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
+    void Character::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
         //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
         glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
         glBindVertexArray(cube.vao);
@@ -33,7 +33,7 @@ namespace glimac {
         glBindVertexArray(0);
     }
 
-    void Character::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+    void Character::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position) {
         fallTest(grid);
         if (_isFalling){
             _y -= 0.08;
@@ -45,7 +45,7 @@ namespace glimac {
 
     }
 
-    int Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position){
+    int Character::moveFront(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position) {
         if (_z>116.){
             std::cout<<"WIN"<<std::endl;
             return 0;
@@ -100,10 +100,9 @@ namespace glimac {
         return 1;
     }
 
-    void Character::jump(const std::vector< std::vector< std::vector<int>>> &grid){
+    void Character::jump(const std::vector< std::vector< std::vector<int>>>& grid) {
         int upblocType = grid[grid.size()-_zGrid][grid[0].size()-int(_xGrid)][int(_y)+1];
         int downblocType = grid[grid.size()-_zGrid][grid[0].size()-(_xGrid)][int(_y)];
-        //std::cout<<downblocType<<std::endl;
         if (upblocType !=3 && _jump==1){//s'il n'est pas sous une arche et qu'il n'est pas deja en train de sauter
             _jump=2;
         }
@@ -131,7 +130,7 @@ namespace glimac {
 
 
 
-    void Character::moveLeft(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
+    void Character::moveLeft(std::vector< std::vector< std::vector<int>>>& grid, int& posX, int& posZ, std::string& position){
         int leftPath = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+4][0];
         int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid+1][0];
         //pour tourner a gauche
@@ -183,7 +182,7 @@ namespace glimac {
         }
     }
 
-    void Character::moveRight(std::vector< std::vector< std::vector<int>>> &grid, int &posX, int &posZ, std::string &position){
+    void Character::moveRight(std::vector< std::vector< std::vector<int>>>& grid, int& posX, int& posZ, std::string& position){
         int rightPath = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-4][0];
         int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid-1][0]; 
         //pour tourner a droite
@@ -235,7 +234,7 @@ namespace glimac {
         }
     }
 
-    void Character::fallTest(const std::vector< std::vector< std::vector<int>>> &grid){
+    void Character::fallTest(const std::vector< std::vector< std::vector<int>>>& grid){
         int blocType = grid[grid.size()-_zGrid-1][grid[0].size() - _xGrid][0];
         if (blocType == 0 && _jump==0){
             if (_isFalling == 0){

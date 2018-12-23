@@ -5,9 +5,10 @@
 #include "common.hpp"
 
 namespace glimac {
-	/*! \class Sphere
+	/*! 
+	\class Sphere
 	\brief Represents a discrete sphere centered in (0, 0, 0) in its local reference point.
-		Its vertical axis is (0, 1, 0) and its transversal axes are (1, 0, 0) and (0, 0, 1)
+	Its vertical axis is (0, 1, 0) and its transversal axes are (1, 0, 0) and (0, 0, 1)
 	*/
 	class Sphere {
 	private:

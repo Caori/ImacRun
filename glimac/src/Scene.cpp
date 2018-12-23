@@ -23,9 +23,14 @@
 namespace glimac {
 
 	Scene::Scene(const std::string& map, const FilePath& applicationPath)
-		:_posX(0), _posZ(0), _direction("NORD"){
+		:_posX(0), _posZ(0), _direction("NORD") {
 		//camera, lights à faire
-		_grid = readPPM(map, applicationPath);
+		try {
+			_grid = readPPM(map, applicationPath);
+		}
+		catch (const Exception &e) {
+			std::cerr << e.what() << std::endl;
+		}
 	}
 
 	void Scene::drawScene(glm::mat4& viewMatrix, const FilePath& applicationPath, SDLWindowManager& windowManager){
@@ -69,15 +74,10 @@ namespace glimac {
 
 	std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &map, const FilePath& applicationPath){
 		std::ifstream file(applicationPath.dirPath() + "../../ImacRun/assets/maps/"+map, std::ios::in);
-		//try{
 			if(!file){
-				//THROW_EXCEPTION("Impossible de lire le fichier test.ppm");
-				std::cout<<"Impossible de lire le fichier "<<map<<std::endl;
+				THROW_EXCEPTION("Impossible de lire le fichier PPM");
 			}
-		//}
-		//catch (const std::exception &e){
-		//	std::cerr << e.what() << std::endl;
-		//}
+
 		int length, height;
 		std::string linePass;
 		getline(file, linePass);

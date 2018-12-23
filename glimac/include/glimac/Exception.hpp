@@ -33,11 +33,5 @@ namespace glimac {
 		std::string m_what;
 	};
 	
-	// On est obligé d'utiliser une macro pour s'assurer que le code est bien recopié par le compilateur
-	// On n'utilise pas une fonction inline car rien ne garantit que le compilateur va la recopier
-	// Si elle n'est pas recopiée, __FILE__ et __LINE__ donneraient : "my_exception.hpp" et "38"
 	#define THROW_EXCEPTION(str) throw Exception(str, __FILE__, __LINE__)
 }
-
-
-

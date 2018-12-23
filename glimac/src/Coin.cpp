@@ -17,7 +17,7 @@ namespace glimac {
     }
 
 
-    void Coin::draw(int i, int j, glm::mat4& viewMatrix, Cube &cube, Sphere &sphere, SDLWindowManager& window) const{
+    void Coin::draw(int i, int j, glm::mat4& viewMatrix, Cube &cube, Sphere &sphere, SDLWindowManager& window) const {
         glm::mat4 projMatrix = glm::perspective(glm::radians(70.f), 1200.f/900.f, 0.1f, 100.f);
         
 		glUniform3f(uKd, 0.3f, 0.8f, 0.3f); //couleur diffuse

@@ -20,11 +20,12 @@ int main(int argc, char** argv) {
 
     FilePath applicationPath(argv[0]);
 
-    //try{
+    try{
 		initialisation();    	
-    //}
-    //si l'initialisation fail ça return EXIT_FAILURE (false en gros)
-    //-->renvoyer exception 
+    }
+    catch (const Exception &e) {
+        std::cerr << e.what() <<std::endl;
+    }
 
 	//ICI MENU	
 	//qui return start game si on clic sur start
