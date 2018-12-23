@@ -4,20 +4,21 @@
 #include <string>
 #include <sstream>
 
-namespace glimac
-{
-	// Je ne mets pas de code d'erreur ni de niveau d'erreur
-	class MyException : public std::exception
-	{
+namespace glimac {
+	/*! 
+	\class Exception
+	\brief A class derived of std::exception
+	*/
+	class Exception : public std::exception {
 	public:
 		
-		MyException(const std::string &description, const std::string &file, const unsigned int line) noexcept
+		Exception(const std::string &description, const std::string &file, const unsigned int line) noexcept
 			: m_description(description), m_file(file), m_line(line)
 		{
 			m_what	= "-> Exception thrown from file " + m_file + " at line " + std::to_string(m_line)
 					+ "\n---> " + m_description;
 		}
-		virtual ~MyException() noexcept {}
+		virtual ~Exception() noexcept {}
 
 	public:
 		const char *what() const noexcept override 
@@ -35,7 +36,7 @@ namespace glimac
 	// On est obligé d'utiliser une macro pour s'assurer que le code est bien recopié par le compilateur
 	// On n'utilise pas une fonction inline car rien ne garantit que le compilateur va la recopier
 	// Si elle n'est pas recopiée, __FILE__ et __LINE__ donneraient : "my_exception.hpp" et "38"
-	#define THROW_EXCEPTION(str) throw MyException(str, __FILE__, __LINE__)
+	#define THROW_EXCEPTION(str) throw Exception(str, __FILE__, __LINE__)
 }
 
 

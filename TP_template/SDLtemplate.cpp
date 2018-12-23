@@ -6,7 +6,9 @@
 #include "glimac/GameManager.hpp"
 #include "glimac/Game.hpp"
 
-
+/*! \namespace glimac
+    \brief A namespace with all the classes used in the program.
+*/
 using namespace glimac;
 
 const uint32_t width = 1200;

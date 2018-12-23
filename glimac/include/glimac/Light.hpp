@@ -35,5 +35,4 @@ namespace glimac {
 		*/
 		virtual void drawLight(glm::mat4& viewMatrix, glm::vec4 direction) const = 0;
 	};
-
 }

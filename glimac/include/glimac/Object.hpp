@@ -12,38 +12,50 @@
 #include <glimac/SDLWindowManager.hpp>
 
 namespace glimac {
+	/*! 
+	\class Object
+	\brief An abstract class used to represent a game object.
+	*/
+	class Object {
+	protected:
+		Program _Program; /**< The combination of shaders used by the object. */
+		GLint uMVPMatrix; /**< The uniform location for the MVP matrix*/
+		GLint uMVMatrix; /**< The uniform location for the MV matrix*/
+		GLint uNormalMatrix; /**< The uniform location for the normal matrix*/
+		//GLint uTexture; /**< The uniform location for the texture*/
+		GLint uKd; /**< The uniform location for the material's diffuse coefficient*/
+		GLint uKs; /**< The uniform location for the material's diffuse coefficient*/
+		GLfloat uShininess; /**< The uniform location for the material's shininess*/
 
-    class Object {
-    protected:
-        Program _Program;
-        GLint uMVPMatrix;
-        GLint uMVMatrix;
-        GLint uNormalMatrix;
-        GLint uKd;
-        GLint uKs;
-        GLfloat uShininess;
+	public:
+		GLint uTexture;
 
-    public:
-        GLint uTexture;
+		Object(const FilePath& applicationPath, const std::string fShader = "directionallight.fs.glsl")
+			: _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
+			applicationPath.dirPath() + "shaders/" + fShader)) {
+			_Program.use();
+			uMVPMatrix = glGetUniformLocation(_Program.getGLId(), "uMVPMatrix");
+			uMVMatrix = glGetUniformLocation(_Program.getGLId(), "uMVMatrix");
+			uNormalMatrix = glGetUniformLocation(_Program.getGLId(), "uNormalMatrix");
+			uTexture = glGetUniformLocation(_Program.getGLId(), "uTexture");
+			uKd = glGetUniformLocation(_Program.getGLId(), "uKd");
+			uKs = glGetUniformLocation(_Program.getGLId(), "uKs");
+			uShininess = glGetUniformLocation(_Program.getGLId(), "uShininess");
+		}
 
-        Object(const FilePath& applicationPath, const std::string fShader = "normals.fs.glsl")
-            : _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
-                                   applicationPath.dirPath() + "shaders/" + fShader))
-                                /*applicationPath.dirPath() + "shaders/directionallight.fs.glsl")) */
-            {
-            _Program.use();
-            uMVPMatrix = glGetUniformLocation(_Program.getGLId(), "uMVPMatrix");
-            uMVMatrix = glGetUniformLocation(_Program.getGLId(), "uMVMatrix");
-            uNormalMatrix = glGetUniformLocation(_Program.getGLId(), "uNormalMatrix");
-            uTexture = glGetUniformLocation(_Program.getGLId(), "uTexture");
-            uKd = glGetUniformLocation(_Program.getGLId(), "uKd");
-            uKs = glGetUniformLocation(_Program.getGLId(), "uKs");
-            uShininess = glGetUniformLocation(_Program.getGLId(), "uShininess");
-        }
-        ~Object() {}
+		~Object() {}
 
-        virtual void draw(int i, int j, glm::mat4 &viewMatrix/*Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const = 0;
-
-  };
+		/*!
+		* \fn virtual void draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, const FilePath& applicationPath) const
+		* \brief A pure virtual function to draw a game object.
+		* \param i Corresponding X coordinate in the scene grid
+		* \param j Corresponding Y coordinate in the scene grid 
+		* \param viewMatrix Reference to the active view matrix
+		* \param cube Reference to the scene's cube primitive
+		* \param sphere Reference to the scene's cube primitive
+		* \param window Reference to the game's window
+		*/
+		virtual void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const = 0;
+	};
 
 }
