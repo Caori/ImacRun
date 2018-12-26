@@ -5,43 +5,64 @@
 #include "common.hpp"
 
 namespace glimac {
+	/*! 
+	\class Sphere
+	\brief Represents a discrete sphere centered in (0, 0, 0) in its local reference point.
+	Its vertical axis is (0, 1, 0) and its transversal axes are (1, 0, 0) and (0, 0, 1)
+	*/
+	class Sphere {
+	private:
+		std::vector<ShapeVertex> m_Vertices; /**< Vector of SHapeVertex vertices */
+		GLsizei m_nVertexCount; /**< Number of vertices */
 
-// Représente une sphère discrétisée centrée en (0, 0, 0) (dans son repère local)
-// Son axe vertical est (0, 1, 0) et ses axes transversaux sont (1, 0, 0) et (0, 0, 1)
-class Sphere {
-    // Alloue et construit les données (implantation dans le .cpp)
-    void build(GLfloat radius, GLsizei discLat, GLsizei discLong);
-    //envoie les données aux vao/vbo
-    void sendData();
+		/*!
+		* \fn void build(GLfloat radius, GLsizei discLat, GLsizei discLong);
+		* \brief Allocates and builds the sphere data.
+		* \param radius Radius of the sphere
+		* \param discLat Number of sides in latitude
+		* \param discLong Number of sides in longitude
+		*/
+		void build(GLfloat radius, GLsizei discLat, GLsizei discLong);
 
-public:
-    GLuint vao, vbo;
+		/*! 
+		* \fn void sendData()
+		* \brief Sends data to the vbo and the vao
+		*/
+		void sendData();
 
-    // Constructeur: alloue le tableau de données et construit les attributs des vertex
-    Sphere(GLfloat radius = 0.5, GLsizei discLat=16, GLsizei discLong=8):
-        m_nVertexCount(0) {
-        build(radius, discLat, discLong); // Construction (voir le .cpp)
-        sendData();
-    }
+	public:
+		GLuint vao; /**< Vertex array object */
+		GLuint vbo; /**< Vertex buffer object */
 
-    ~Sphere(){
-        glDeleteBuffers(1,&vbo);
-        glDeleteVertexArrays(1,&vao);
-    }
+		Sphere(GLfloat radius = 0.5, GLsizei discLat = 16, GLsizei discLong = 8)
+			: m_nVertexCount(0) {
+			build(radius, discLat, discLong); // Construction (voir le .cpp)
+			sendData();
+		}
 
-    // Renvoit le pointeur vers les données
-    const ShapeVertex* getDataPointer() const {
-        return &m_Vertices[0];
-    }
-    
-    // Renvoit le nombre de vertex
-    GLsizei getVertexCount() const {
-        return m_nVertexCount;
-    }
+		~Sphere(){
+			glDeleteBuffers(1, &vbo);
+			glDeleteVertexArrays(1, &vao);
+		}
 
-private:
-    std::vector<ShapeVertex> m_Vertices;
-    GLsizei m_nVertexCount; // Nombre de sommets
-};
+		/*! 
+		* \fn inline const ShapeVertex* getDataPointer() const
+		* \brief Gets data pointer
+		* \return Const pointer of ShapeVertex
+		*/
+		inline const ShapeVertex* getDataPointer() const {
+			return &m_Vertices[0];
+		}
+
+		/*! 
+		* \fn inline GLsizei getVertexCount() const
+		* \brief Gets the number of vertices of the sphere
+		* \return Const pointer of ShapeVertex
+		*/
+		inline GLsizei getVertexCount() const {
+			return m_nVertexCount;
+		}
+
+	};
     
 }

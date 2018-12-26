@@ -12,23 +12,27 @@
 #include "glimac/Sphere.hpp"
 
 namespace glimac {
-/// \class Ground
-/// \brief description...
-class Wall : public Object {
-    public:
-        /// \return Ground
-        /// \param applicationPath: description...
-        Wall(const FilePath& applicationPath);
+	/*! 
+	\class Wall
+	\brief A class derived of Object used to represent an wall
+	*/
+	class Wall : public Object {
+	public:
+		Wall(const FilePath& applicationPath);
 
-        ~Wall() {}
+		~Wall() {}
 
-        /// \return void
-        /// \param i: description...
-        /// \param j: description...
-        /// \param camera: description...
-        /// \brief Get the active camera's view matrix, build and send the matrixes
-        /// to the shader, send the material data to the shader and draws a Ground.
-        void draw(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &rotationMatrix, /*,Camera& camera*/Cube& cube, Sphere& sphere) const;
-};
-
+		/*!
+		* \fn void draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, const FilePath& applicationPath) const
+		* \brief A function derived from Object::draw().
+		Sends data to the shaders and draws a wall.
+		* \param i Corresponding X coordinate in the scene grid
+		* \param j Corresponding Y coordinate in the scene grid 
+		* \param viewMatrix Reference to the active view matrix
+		* \param cube Reference to the scene's cube primitive
+		* \param sphere Reference to the scene's cube primitive
+		* \param applicationPath Path to main file, cannot be null
+		*/
+		void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const;
+	};
 }

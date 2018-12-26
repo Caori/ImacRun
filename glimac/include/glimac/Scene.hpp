@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <GL/glew.h>
 #include <glimac/SDLWindowManager.hpp>
@@ -6,40 +8,56 @@
 #include <glimac/Object.hpp>
 #include <glimac/Ground.hpp>
 #include <glimac/TrackballCamera.hpp>
-#include <glimac/Personnage.hpp>
+#include <glimac/Character.hpp>
+#include <string>
 
 namespace glimac {
-
-class Scene{
+	/*!
+	\class Scene
+	\brief A class used to represent the game environment.
+		Stores the primitive elements used in the environment;
+	*/
+	class Scene{
 	public:
 		/*
 		Light _lights[];
 		Camera _cams[];*/
-		TrackballCamera _trackCam;
-
-		//std::vector<Object*> _objects;
+		//TrackballCamera _trackCam;
 		Cube _cube;
 		Sphere _sphere;
-		glm::mat4 _rotationMatrix;
-
+		int _posX, _posZ;
+		std::string _direction;
 		std::vector< std::vector< std::vector<int>>> _grid;
 
-		//Constructeur et destructeurs
-		Scene();
-		~Scene(){}
-        
-		std::vector< std::vector< std::vector<int>>> readPPM();
+		Scene(const std::string &map, const FilePath& applicationPath);
 
-		int getLargeur(){
+		~Scene() {}
+
+		/*!
+		* \fn std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map, const FilePath& applicationPath)
+		* \brief Reads the PPM file and fills un _grid with corresponding integers
+		* \param map Reference to the map name.
+		* \param applicationPath Path to main file, cannot be null
+		* \return 3D vector of integers
+		*/
+		std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map, const FilePath& applicationPath);
+
+		/*!
+		* \fn inline int getWidth()
+		* \brief Gets the width of the grid
+		* \return integer width of _grid
+		*/
+		int getWidth(){
 			return _grid[0].size();
 		}
-		void drawScene(glm::mat4 &viewMatrix /*,Camera &camera*/);
-		/*
-		void draw1(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &projMatrix, Cube &cube, GLint &locationuMVMatrix, GLint &locationuMVPMatrix, GLint &locationuNormalMatrix);
-		void draw2(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &projMatrix, Cube &cube, Sphere &sphere, GLint &locationuMVMatrix, GLint &locationuMVPMatrix, GLint &locationuNormalMatrix);
-		void draw5(int i, int j, glm::mat4 &viewMatrix, glm::mat4 &projMatrix, Cube &cube, GLint &locationuMVMatrix, GLint &locationuMVPMatrix, GLint &locationuNormalMatrix);
+
+		/*!
+		* \fn void drawScene(glm::mat4& viewMatrix, FilePath& applicationPath);
+		* \brief Places the lights, cameras and game objects and calls their draw functions
+		* \param viewMatrix Reference to the active view matrix
+		* \param applicationPath Path to main file, cannot be null
+		* \param windowManager Reference to the current window manager
 		*/
-};
-
-
+		void drawScene(glm::mat4& viewMatrix, const FilePath& applicationPath, SDLWindowManager& windowManager);
+	};
 }

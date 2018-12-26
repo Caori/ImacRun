@@ -7,7 +7,6 @@
 #include <glimac/Program.hpp>
 #include <glimac/FilePath.hpp>
 #include <glimac/Image.hpp>
-#include "glimac/shader130Manager.hpp"
 
 namespace glimac{
 
@@ -33,19 +32,12 @@ namespace glimac{
 		   	GLint uModelTexture1, uModelTexture2;
 		
 		public:
-			Menu(const FilePath& filepathShader)
-			:  _Program(loadProgram("/home/administrateur/Documents/Projet/ImacRun/TP_menu/shaders/tex2D.vs.glsl",
-	                                  "/home/administrateur/Documents/Projet/ImacRun/TP_menu/shaders/multiTex2D.fs.glsl"))
+			Menu(const FilePath& applicationPath)
+			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/shaders_130/tex2D.vs.glsl",
+	                                  applicationPath.dirPath() + "shaders/shaders_130/multiTex2D.fs.glsl"))
 
 			{
 				_Program.use();
-				/********************************
-			    IF YOU'RE USING GLSL VERSION 130
-			    DELETE THIS PART IF YOU'RE VERSION 330
-			    ********************************/
-			   GLuint test = LoadShader("/home/administrateur/Documents/Projet/ImacRun/TP_menu/shaders/tex2D.vs.glsl", "/home/administrateur/Documents/Projet/ImacRun/TP_menu/shaders/multiTex2D.fs.glsl");
-			    glUseProgram(test);
-			    // END - IF YOU'RE USING GLSL VERSION 130
 			}
 			~Menu();
 			

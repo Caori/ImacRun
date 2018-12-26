@@ -4,24 +4,24 @@
 
 namespace glimac {
 
-  class TrackballCamera {
+class TrackballCamera {
+    private:
+        float _fDistance; //distance frontale par rapport au centre de la scène
+        float _fLeftDistance;//distance latérale par rapport au centre de la scène
+        float _fAngleX; //angle fait par la caméra autour de l'axe x (haut bas)
+        float _fAngleY; //angle fait par caméra autour de l'axe y (gauche droite)
 
-  private:
-    float m_fDistance; //distance par rapport au centre de la scène
-    float m_fAngleX; //angle fait par la caméra autour de l'axe x (haut bas)
-    float m_fAngleY; //angle fait par caméra autour de l'axe y (gauche droite)
+    public:
+        TrackballCamera();
+        ~TrackballCamera() {}
 
-  public:
-    TrackballCamera();
-    ~TrackballCamera() {}
+        void move(const std::string &direction, const float speed);
+        void moveFront(const float delta);
+        void moveLeft(const float delta);
+        void rotateLeft(const float degrees);
+        void rotateUp(const float degrees);
 
-    void moveFront(float delta);
-
-    void rotateLeft(float degrees);
-
-    void rotateUp(float degrees);
-
-    glm::mat4 getViewMatrix() const;
-  };
+        glm::mat4 getViewMatrix() const;
+};
 
 }

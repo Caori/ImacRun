@@ -109,10 +109,10 @@ GLuint Menu::initializeMenu2(){
      return vao2;
 }
 
-GLuint Menu::loadTexture(const FilePath& filepath){
+GLuint Menu::loadTexture(const FilePath& applicationPath){
     // load menu background
     std::unique_ptr<Image> menuBackground;
-    menuBackground = loadImage(filepath);
+    menuBackground = loadImage(applicationPath);
 
     // stock textures in array
     GLuint texture[1];
