@@ -30,8 +30,8 @@ namespace glimac {
 	public:
 		GLint uTexture;
 
-		Object(const FilePath& applicationPath, const std::string fShader = "directionallight.fs.glsl")
-			: _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
+		Object(const FilePath& applicationPath, const std::string fShader = "directionallight_130.fs.glsl")
+			: _Program(loadProgram(applicationPath.dirPath() + "shaders/shaders_130/3D_130.vs.glsl",
 			applicationPath.dirPath() + "shaders/" + fShader)) {
 			_Program.use();
 			uMVPMatrix = glGetUniformLocation(_Program.getGLId(), "uMVPMatrix");

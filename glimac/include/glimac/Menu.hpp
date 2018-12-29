@@ -29,7 +29,6 @@ namespace glimac{
 			// uniform variables
 			GLint uModelMatrixLocation;
 		   	GLint uModelColor;
-		   	GLint uModelTexture1, uModelTexture2;
 		
 		public:
 			Menu(const FilePath& applicationPath)
@@ -44,8 +43,8 @@ namespace glimac{
 			// display the menu in parameter
 			GLuint initializeMenu();
 			GLuint initializeMenu2();
-			GLuint loadTexture(const FilePath& filepath);
-			void displayMenu(SDLWindowManager &_windowManager, GLuint *texture);
+			GLuint loadTexture(const FilePath& filepath, const FilePath& filepath2, const FilePath& filepath3);
+			void displayMenu(SDLWindowManager &_windowManager, GLuint *texture, int indexTexture);
 	};
 
 }

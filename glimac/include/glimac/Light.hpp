@@ -19,8 +19,8 @@ namespace glimac {
 
 	public:
 		Light(const FilePath& applicationPath)
-			: _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
-				applicationPath.dirPath() + "shaders/directionallight.fs.glsl")) {
+			: _Program(loadProgram(applicationPath.dirPath() + "shaders/shaders_130/3D_130.vs.glsl",
+				applicationPath.dirPath() + "shaders/shaders_130/directionallight_130.fs.glsl")) {
 			_Program.use();
 			uLightIntensity = glGetUniformLocation(_Program.getGLId(), "uLightIntensity");
 		}

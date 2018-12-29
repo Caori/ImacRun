@@ -21,6 +21,21 @@ namespace glimac {
     m_UpVector = glm::cross(m_FrontVector, m_LeftVector);
   }
 
+  void FreeflyCamera::move(const std::string &direction, const float speed){
+    if (direction == "NORD"){
+       moveFront(-speed);
+    }
+    if (direction == "SUD"){
+        moveFront(speed);
+    }
+    if (direction == "OUEST"){
+       moveLeft(speed);
+    }
+    if (direction == "EST"){
+        moveLeft(-speed);
+    }
+}
+
   void FreeflyCamera::moveLeft(float t) {
     m_Position += t*m_LeftVector;
   }

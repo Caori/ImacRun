@@ -109,14 +109,16 @@ GLuint Menu::initializeMenu2(){
      return vao2;
 }
 
-GLuint Menu::loadTexture(const FilePath& applicationPath){
-    // load menu background
-    std::unique_ptr<Image> menuBackground;
-    menuBackground = loadImage(applicationPath);
+GLuint Menu::loadTexture(const FilePath& filepath, const FilePath& filepath2, const FilePath& filepath3){
+    // load menu backgrounds
+    std::unique_ptr<Image> menuBackground, menuBackground2, menuBackground3;
+    menuBackground = loadImage(filepath);
+    menuBackground2 = loadImage(filepath2);
+    menuBackground3 = loadImage(filepath3);
 
     // stock textures in array
-    GLuint texture[1];
-    glGenTextures(1, texture);
+    GLuint texture[3];
+    glGenTextures(3, texture);
 
     // bind first texture
     glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -125,27 +127,44 @@ GLuint Menu::loadTexture(const FilePath& applicationPath){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D,0);
 
+    // bind second texture
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,menuBackground2->getWidth(), menuBackground2->getHeight(),0,GL_RGBA,GL_FLOAT,menuBackground2->getPixels());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D,0);
+
+    // bind third texture
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,menuBackground3->getWidth(), menuBackground3->getHeight(),0,GL_RGBA,GL_FLOAT,menuBackground3->getPixels());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D,0);
+
     return *texture;
 }
 
-void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture){
+void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture, int indexTexture){
     GLint uModelMatrixLocation = glGetUniformLocation(_Program.getGLId(), "uModelMatrix");
     GLint uModelColor = glGetUniformLocation(_Program.getGLId(),"uColor");
     GLint uModelTexture1 = glGetUniformLocation(_Program.getGLId(),"uTexture1");
     GLint uModelTexture2 = glGetUniformLocation(_Program.getGLId(),"uTexture2");
+    GLuint uModelTexture3 = glGetUniformLocation(_Program.getGLId(), "uTexture3");
     
     GLuint vao = initializeMenu();
     GLuint vao2 = initializeMenu2();
 
     // rendering
     //clean the window
-    glClear(GL_COLOR_BUFFER_BIT);
+   // glClear(GL_COLOR_BUFFER_BIT);
 
+    // each texture variable is associated with a texture unit
     glUniform1i(uModelTexture1, 0);
     glUniform1i(uModelTexture2, 1);
+    glUniform1i(uModelTexture3, 2);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,texture[0]);
+    glActiveTexture(GL_TEXTURE0 + indexTexture);
+    glBindTexture(GL_TEXTURE_2D, uModelTexture1 + indexTexture);
         //Triangle 1
         glm::mat3 matTriangle1 = glm::mat3(1.f);
         glm::vec3 colorTriangle = glm::vec3(0,1,0);
@@ -156,13 +175,13 @@ void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture){
             glDrawArrays(GL_TRIANGLES,0,3);
         glBindVertexArray(0);
 
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0 + indexTexture);
     glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE0
 
 
     // texture triangle 2
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D,texture[0]);
+    glActiveTexture(GL_TEXTURE0 + indexTexture);
+    glBindTexture(GL_TEXTURE_2D, uModelTexture1 + indexTexture);
         // Triangle 2
         glm::mat3 matTriangle2 = glm::mat3(1.f);
         colorTriangle = glm::vec3(1,0,0);
@@ -174,7 +193,7 @@ void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture){
             glDrawArrays(GL_TRIANGLES,0,3);
         glBindVertexArray(0);
 
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE0 + indexTexture);
     glBindTexture(GL_TEXTURE_2D, 0); // débind sur l'unité GL_TEXTURE1
 }
 

@@ -2,6 +2,7 @@
 #include "glimac/Game.hpp"
 #include "glimac/SDLWindowManager.hpp"
 #include "glimac/TrackballCamera.hpp"
+#include "glimac/FreeflyCamera.hpp"
 #include <iostream>
 #include <glimac/Image.hpp>
 #include <cmath>
@@ -16,54 +17,73 @@ namespace glimac {
 		_foe1(applicationPath, _scene.getWidth()/2+1, 0.3, -6., 0.6),
 		_foe2(applicationPath, _scene.getWidth()/2,  0.3, -6.,  0.7),
 		_foe3(applicationPath, _scene.getWidth()/2-1, 0.3, -6.,  0.65),
-		_done(false), _pause(2), _menu(0), _speed(0.1) {
+		_done(false), _pause(2), _menu(0), _camera(0), _speed(0.1) {
 		glEnable(GL_DEPTH_TEST);
 	}	
 
 	void Game::playGame(const FilePath& applicationPath) {
         // main menu
-        Menu mainMenu(applicationPath);
-        GLuint mainMenuBackground = mainMenu.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png");
-        // pause menu
-       Menu pauseMenu(applicationPath);
-        GLuint pauseMenuBackground = pauseMenu.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png");
-        // game over menu
-        Menu gameOverMenu(applicationPath);
-        GLuint gameOverMenuBackground = gameOverMenu.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
+        Menu menus(applicationPath);
+        GLuint menuBackgrounds = menus.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png", applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
+
+        glm::mat4 viewMatrix = glm::mat4(1.f);
 
 		while(!_done){
 			gameEvent();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            if(_pause == 2){
-                mainMenu.displayMenu(_windowManager, &mainMenuBackground);
-                _menu = 0;
+            // collision character et ennemi (foe)
+            if( _foe2._z == _character._z){
+                _character._isAlive = 1;
+                std::cout << "Vous avez été tué par l'ennemi" << std::endl;
             }
 
+            // fonctionne
+           if(_pause == 2){
+                menus.displayMenu(_windowManager, &menuBackgrounds, 0);
+                //_menu = 0;
+            }
+
+            // fonctionne quand gameRendering mis en commentaire
             if(_character._isAlive == 1 || _character._isFalling == 1){
-                std::cout << "Alive = " << _character._isAlive << std::endl;
-                gameOverMenu.displayMenu(_windowManager, &gameOverMenuBackground);
+                //std::cout << "Alive = " << _character._isAlive << std::endl;
+                menus.displayMenu(_windowManager, &menuBackgrounds, 2);
                 _pause = 3;
                 _menu = 2;
             }
 
+            // fonctionne quand gameRendering mis en commentaire
             if(_pause == 1){
-                pauseMenu.displayMenu(_windowManager, &pauseMenuBackground);
+                menus.displayMenu(_windowManager, &menuBackgrounds, 1);
                 _menu = 1;
             }
             
             if(_pause == 0){
-    		  _trackballCamera.move(_scene._direction, _speed);
-    		  _character.move(_scene._grid, _speed, _scene._direction);
-    		  _foe1._z+=_speed+0.003*cos(_windowManager.getTime());
-    		  _foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
-    		  _foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
-            
-              gameRendering(applicationPath, mainMenu, &mainMenuBackground);
+                //std::cout << "camera value = " << _camera << std::endl;
+                std::cout << "foe2.z = " << _foe2._z << std::endl;
+                std::cout << "character.z = " << _character._z << std::endl;
+
+    		    _trackballCamera.move(_scene._direction, _speed);
+                _freeflyCamera.move(_scene._direction, _speed);
+    		    _character.move(_scene._grid, _speed, _scene._direction);
+    		    _foe1._z+=_speed+0.003*cos(_windowManager.getTime());
+    		    _foe2._z+=_speed;
+    		    _foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
+
+                
+                // changement de caméra : touche C détectée mais il ne se passe rien
+                if(_camera == 0){
+                    viewMatrix = _trackballCamera.getViewMatrix();
+                }
+                if(_camera == 1){
+                    viewMatrix = _freeflyCamera.getViewMatrix();
+                }
+
+                gameRendering(applicationPath, viewMatrix);
             }
             _windowManager.swapBuffers();
 		}
-        glDeleteTextures(3,(GLuint*)(&mainMenuBackground));
+        glDeleteTextures(3,(GLuint*)(&menuBackgrounds));
 	}
 
     void Game::gameEvent(){
@@ -101,6 +121,16 @@ namespace glimac {
                         else {_pause=0;}
                         _speed = 0.1*(1-_pause);
                     }
+                    if(_windowManager.isKeyPressed(SDLK_c) == true){
+                        if(_camera == 0){
+                            _camera == 1;
+                            std::cout << "TOUCHE C" << std::endl;
+                        }
+                        else{
+                            _camera == 0;
+                            std::cout << "Passage à 0" << std::endl;
+                        }
+                    }
                     break;
 
                 // Menus : 0 = main menu, 1 = pause, 2 = game over
@@ -124,15 +154,16 @@ namespace glimac {
                    if(_menu == 1){
                         if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
                             if(mousePosX >=200 && mousePosX <= 600
-                                && mousePosY >= 120 && mousePosY <= 220){
+                                && mousePosY >= 250 && mousePosY <= 350){
                                 _pause = 0;
+                                _speed = 0.1*(1-_pause);
                             }
                         }
                     }
                     if(_menu == 2){
                         if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
                             if(mousePosX >=200 && mousePosX <= 600
-                                && mousePosY >= 120 && mousePosY <= 220){
+                                && mousePosY >= 250 && mousePosY <= 350){
                                 _done = true;
                             }
                         }
@@ -153,11 +184,11 @@ namespace glimac {
         }
     }
 
-    void Game::gameRendering(const FilePath& applicationPath, Menu &mainMenu, GLuint* mainMenuBackground){
+    void Game::gameRendering(const FilePath& applicationPath, glm::mat4 viewMatrix){
         
        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
+      //glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
         viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
         _character.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
         _foe1.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
