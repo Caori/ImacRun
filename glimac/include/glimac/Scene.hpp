@@ -9,6 +9,7 @@
 #include <glimac/Ground.hpp>
 #include <glimac/TrackballCamera.hpp>
 #include <glimac/Character.hpp>
+#include <glimac/Model.hpp>
 #include <string>
 
 namespace glimac {

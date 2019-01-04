@@ -12,17 +12,16 @@
 
 namespace glimac {
 
-	Ground::Ground(const FilePath& applicationPath, const std::string fShader)
-		: Object(applicationPath, fShader){
-	}
+	Ground::Ground(const Model& model)
+		: Object(), model(model) {}
 
 	void Ground::draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const {
 		//attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
 		glm::mat4 projMatrix = glm::perspective(glm::radians(70.f), 1200.f/900.f, 0.1f, 100.f);
 
-		glUniform3f(uKd, 0.3f, 0.8f, 0.3f); //couleur diffuse
-		glUniform3f(uKs, 0.7f, 0.2f, 0.7f); //couleur tache speculaire
-		glUniform1f(uShininess, 64);
+		glUniform3f(uKd, 0.6f, 0.2f, 0.2f); //couleur diffuse
+		glUniform3f(uKs, 0.6f, 0.2f, 0.2f); //couleur tache speculaire
+		glUniform1f(uShininess, 2);
 
 		glBindVertexArray(cube.vao);
 			glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(j, 0., -i));

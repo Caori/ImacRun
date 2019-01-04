@@ -10,6 +10,7 @@
 #include "glimac/Cube.hpp"
 #include "glimac/Sphere.hpp"
 #include <glimac/SDLWindowManager.hpp>
+#include <glimac/Parameters.hpp>
 
 namespace glimac {
 	/*! 
@@ -30,9 +31,9 @@ namespace glimac {
 	public:
 		GLint uTexture;
 
-		Object(const FilePath& applicationPath, const std::string fShader = "directionallight.fs.glsl")
-			: _Program(loadProgram(applicationPath.dirPath() + "shaders/3D.vs.glsl",
-			applicationPath.dirPath() + "shaders/" + fShader)) {
+		Object()
+			: _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/3D.vs.glsl",
+			Parameters::instance().appPath().dirPath() + "shaders/directionallight.fs.glsl")) {
 			_Program.use();
 			uMVPMatrix = glGetUniformLocation(_Program.getGLId(), "uMVPMatrix");
 			uMVMatrix = glGetUniformLocation(_Program.getGLId(), "uMVMatrix");

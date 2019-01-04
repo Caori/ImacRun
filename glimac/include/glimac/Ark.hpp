@@ -10,6 +10,7 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*! \class Ark
@@ -17,7 +18,9 @@ namespace glimac {
 	*/
 	class Ark : public Object {
 	public:
-		Ark(const FilePath& applicationPath);
+		const Model& model;
+
+		Ark(const Model& model);
 
 		~Ark() {}
 

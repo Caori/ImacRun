@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include "glimac/GameManager.hpp"
 #include "glimac/Game.hpp"
+#include "glimac/Parameters.hpp"
 
 /*! \namespace glimac
     \brief A namespace with all the classes used in the program.
@@ -19,6 +20,9 @@ int main(int argc, char** argv) {
     SDLWindowManager windowManager(width, height, "IMACRUN");
 
     FilePath applicationPath(argv[0]);
+    
+     Parameters& Parameters = Parameters::instance();
+    Parameters.appPath() = FilePath(argv[0]);
 
     try{
 		initialisation();    	

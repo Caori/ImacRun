@@ -11,11 +11,11 @@ namespace glimac {
 	Game::Game(const SDLWindowManager &window, const FilePath& applicationPath)
 		:_windowManager(window),
 		_scene("map1.ppm", applicationPath), 
-		_character(applicationPath, _scene.getWidth()/2),
+		_character(_scene.getWidth()/2),
 		// les 3 nombres en + : décalage hauteur, profondeur et scale pour les ennemis
-		_foe1(applicationPath, _scene.getWidth()/2+1, 0.3, -6., 0.6),
-		_foe2(applicationPath, _scene.getWidth()/2,  0.3, -6.,  0.7),
-		_foe3(applicationPath, _scene.getWidth()/2-1, 0.3, -6.,  0.65),
+		_foe1(_scene.getWidth()/2+1, 0.3, -6., 0.6),
+		_foe2(_scene.getWidth()/2,  0.3, -6.,  0.7),
+		_foe3(_scene.getWidth()/2-1, 0.3, -6.,  0.65),
 		_done(false), _pause(0), _speed(0.02) {
 		glEnable(GL_DEPTH_TEST);
 	}	

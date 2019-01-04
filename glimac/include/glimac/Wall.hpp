@@ -10,6 +10,7 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*! 
@@ -18,7 +19,9 @@ namespace glimac {
 	*/
 	class Wall : public Object {
 	public:
-		Wall(const FilePath& applicationPath);
+		const Model& model;
+
+		Wall(const Model& model);
 
 		~Wall() {}
 

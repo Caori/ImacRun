@@ -19,6 +19,8 @@
 #include <string>
 #include <glimac/Light.hpp>
 #include <glimac/Image.hpp>
+#include "glimac/AssetLoader.hpp"
+#include <glimac/Model.hpp>
 
 namespace glimac {
 
@@ -34,13 +36,15 @@ namespace glimac {
 	}
 
 	void Scene::drawScene(glm::mat4& viewMatrix, const FilePath& applicationPath, SDLWindowManager& windowManager){
-		Ground ground(applicationPath, "directionallight.fs.glsl");
-		Wall wall(applicationPath);
-		Coin coin1(applicationPath, 1);
-		Coin coin2(applicationPath, 2);
-		Coin coin3(applicationPath, 3);
-		Ark ark(applicationPath);
-		Obstacle obstacle(applicationPath);
+
+		Ground ground(AssetLoader::instance().models()["cube"]);
+		Wall wall(AssetLoader::instance().models()["barrel"]);
+		Coin coin1(1, AssetLoader::instance().models()["coin"]);
+		Coin coin2(2, AssetLoader::instance().models()["coin"]);
+		Coin coin3(3, AssetLoader::instance().models()["coin"]);
+		Ark ark(AssetLoader::instance().models()["bird"]);
+		Obstacle obstacle(AssetLoader::instance().models()["cat"]);
+
 		DirectionalLight light(applicationPath);
 		light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
 

@@ -15,8 +15,8 @@
 
 namespace glimac {
 
-    Character::Character(const FilePath& applicationPath, float demiLargeur, float y, float z, float scale)
-        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object(applicationPath) {
+    Character::Character(float demiLargeur, float y, float z, float scale)
+        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object() {
     }
 
     void Character::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {

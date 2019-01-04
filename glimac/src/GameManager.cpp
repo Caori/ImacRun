@@ -3,6 +3,7 @@
 #include "glimac/Exception.hpp"
 #include <GL/glew.h>
 #include "glimac/Game.hpp"
+#include "glimac/AssetLoader.hpp"
 
 namespace glimac {
 
@@ -18,6 +19,7 @@ int initialisation(){
 }
 
 void startGame(SDLWindowManager &windowManager, const FilePath& applicationPath){
+    AssetLoader& assetLoader = AssetLoader::instance();
 	Game game(windowManager, applicationPath);
     game.playGame(applicationPath);
     //if _pause == 1 --> afficher pause

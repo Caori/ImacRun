@@ -3,6 +3,7 @@
 #include <glimac/Character.hpp>
 #include <glimac/Scene.hpp>
 #include <glimac/SDLWindowManager.hpp>
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*!

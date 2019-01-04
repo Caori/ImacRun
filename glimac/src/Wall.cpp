@@ -12,8 +12,8 @@
 
 namespace glimac {
 
-	Wall::Wall(const FilePath& applicationPath)
-		: Object(applicationPath) {
+	Wall::Wall(const Model& model)
+		: Object(), model(model) {
 	}
 
 	void Wall::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
@@ -23,20 +23,13 @@ namespace glimac {
 		glUniform3f(uKs, 0.8f, 0.7f, 0.2f); //couleur tache speculaire
 		glUniform1f(uShininess, 20);
 
-		glBindVertexArray(cube.vao);
+		glBindVertexArray(model.VAO());
 			glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(j, 0., -i));
 			glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
 			glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
 			glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
 			glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
-			glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
-
-			MVMatrix = glm::translate(glm::mat4(1.0),glm::vec3(j, 1., -i))*viewMatrix;
-			NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
-			glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
-			glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
-			glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
-			glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
+			glDrawElements(GL_TRIANGLES, model.geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 }

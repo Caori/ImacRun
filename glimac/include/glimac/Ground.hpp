@@ -9,6 +9,7 @@
 #include "Object.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*!
@@ -17,7 +18,9 @@ namespace glimac {
 	*/
 	class Ground : public Object {
 	public:
-		Ground(const FilePath& applicationPath, const std::string fShader);
+		const Model& model;
+		
+		Ground(const Model& model);
 
 		~Ground(){}
 
