@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include "glimac/Model.hpp"
+#include "glimac/Texture.hpp"
 
 namespace glimac {
 
@@ -31,10 +32,14 @@ namespace glimac {
 
 	public:
 		// CONST GETTERS
-		const std::map<std::string, Model>& models() const { return _models; };
+		const std::map<std::string, Model>& models() const {
+			return _models;
+		}
 
 		// NON-CONST GETTERS
-		std::map<std::string, Model>& models() { return _models; };
+		std::map<std::string, Model>& models() {
+			return _models;
+		}
 
 	private:
 		// METHODS
@@ -47,7 +52,7 @@ namespace glimac {
 		//TODO : add this stuff
 
 		/// \brief textures assets
-		// std::map<int, Texture> _textures;
+		//std::map<int, Texture> _textures;
 	};
 
 }

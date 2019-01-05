@@ -8,6 +8,8 @@
 #include <glimac/SDLWindowManager.hpp>
 #include <glimac/common.hpp>
 #include <glimac/Program.hpp>
+#include <glimac/Parameters.hpp>
+#include <glimac/Texture.hpp>
 
 namespace glimac {
 
@@ -21,7 +23,7 @@ namespace glimac {
 
 		/// \brief Model Constructor by model name
 		/// \param modelName : std::string& name of the model
-		Model(const std::string& modelName);
+		Model(const std::string& modelName, const std::string& textureName);
 
 		/// \brief Model Copy constructor
 		/// \param model : Model Model to copy
@@ -51,6 +53,11 @@ namespace glimac {
 			return _geometry; 
 		}
 
+		/// \brief get Texture ID
+		const GLuint textureID() const {
+			return _textureID;
+		}
+
 		// SETTERS // TODO : change for non-const getters ?
 		// NON-CONST GETTERS (can be used as setters)
 		/// \brief set VBO of the model
@@ -64,6 +71,8 @@ namespace glimac {
 		/// \brief set VAO based on the VBO and VAO
 		void setVAO();
 
+		void setTexture(const std::string textureName);
+
 	private:
 		/// \brief Contains the vertices and materials of the model
 		glimac::Geometry _geometry;
@@ -73,6 +82,12 @@ namespace glimac {
 		GLuint _IBO;
 		/// \brief Represent the VAO of the model
 		GLuint _VAO;
-	};
 
+		/// \brief Texture ID of the model
+		GLuint _textureID;
+
+		Texture* _texture;
+
+		std::string _textureName;
+	};
 }

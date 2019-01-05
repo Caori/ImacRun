@@ -1,12 +1,4 @@
 #include <iostream>
-#include <GL/glew.h>
-#include <string>
-#include <glimac/Geometry.hpp>
-#include <glimac/FilePath.hpp>
-#include <glimac/SDLWindowManager.hpp>
-#include <glimac/common.hpp>
-#include <glimac/Program.hpp>
-#include <glimac/Parameters.hpp>
 #include "glimac/Model.hpp"
 
 namespace glimac {
@@ -17,8 +9,7 @@ namespace glimac {
 		std::cout << "Model: Default constructor" << std::endl;
 	}
 
-	Model::Model(const std::string& modelName) {
-		//glimac::FilePath modelPath = applicationPath.dirPath() + "../../assets/models/" + modelName + "/" + modelName;
+	Model::Model(const std::string& modelName, const std::string& textureName) {
 		glimac::FilePath modelPath =  Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/models/" + modelName + "/" + modelName;
 		glimac::FilePath objPath(modelPath.addExt(".obj")); // Constructeur par copie
 		glimac::FilePath mtlPath(modelPath.addExt(".mtl")); // Constructeur par copie
@@ -31,11 +22,14 @@ namespace glimac {
 		setVBO(_geometry);
 		setIBO(_geometry);
 		setVAO();
+
+		// Texture
+		_textureName = textureName;
+		setTexture(textureName);
 	}
 
-	Model::Model(const Model &model):
-		_geometry(model._geometry)
-	{
+	Model::Model(const Model &model)
+		: _geometry(model._geometry), _textureID(model._textureID) {
 		std::cout << "Model: Copy Constructor" << std::endl;
 		setVBO(_geometry);
 		setIBO(_geometry);
@@ -89,6 +83,15 @@ namespace glimac {
 
 		glBindVertexArray(0);
 		_VAO = vao;
+	}
+
+	void Model::setTexture(const std::string textureName) {
+		std::cout << "setTexture" << std::endl;
+		Texture texture(textureName);
+		_textureID = texture.getTextureID();
+		_textureName = textureName;
+		std::cout << "Texture ID: " << _textureID << std::endl;
+		std::cout << "Texture Name: " << _textureName << std::endl;
 	}
 
 }

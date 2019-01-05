@@ -11,10 +11,16 @@ namespace glimac {
 		std::cout << "AssetLoader : Load assets" << std::endl;
 
 		// TODO : load actual assets for the game
-		_models.insert(std::make_pair("coin", 			Model("coin")));
-		_models.insert(std::make_pair("cat", 			Model("cat")));
-		_models.insert(std::make_pair("tree",			Model("tree")));
-		_models.insert(std::make_pair("bird",			Model("bird")));
-		_models.insert(std::make_pair("barrel",			Model("barrel")));
+		_models.insert(std::make_pair("coin", 			Model("coin", "tex.jpg")));
+		_models.insert(std::make_pair("cat", 			Model("cat", "tex.jpg")));
+		_models.insert(std::make_pair("tree",			Model("tree", "tex.jpg")));
+		_models.insert(std::make_pair("bird",			Model("bird", "tex.jpg")));
+		_models.insert(std::make_pair("barrel",			Model("barrel", "tex.jpg")));
+
+		/*_textures.insert(std::make_pair("coin", 			Model("coin", "tex.jpg")));
+		_textures.insert(std::make_pair("cat", 			Model("cat", "tex.jpg")));
+		_textures.insert(std::make_pair("tree",			Model("tree", "tex.jpg")));
+		_textures.insert(std::make_pair("bird",			Model("bird", "tex.jpg")));
+		_textures.insert(std::make_pair("barrel",			Model("barrel", "tex.jpg")));*/
 	}
 }
