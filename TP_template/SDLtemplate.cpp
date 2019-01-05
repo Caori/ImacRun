@@ -19,9 +19,9 @@ int main(int argc, char** argv) {
     // Initialize glew for OpenGL3+ support
     SDLWindowManager windowManager(width, height, "IMACRUN");
 
-    FilePath applicationPath(argv[0]);
-    
-     Parameters& Parameters = Parameters::instance();
+    //FilePath applicationPath(argv[0]);
+
+    Parameters& Parameters = Parameters::instance();
     Parameters.appPath() = FilePath(argv[0]);
 
     try{
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 
 	//ICI MENU	
 	//qui return start game si on clic sur start
-	startGame(windowManager, applicationPath);
+	startGame(windowManager);
 
 	//dans la fonction startGame (cf. Gamemanager.cpp)  si bool pause ==1 --> afficher pause
 

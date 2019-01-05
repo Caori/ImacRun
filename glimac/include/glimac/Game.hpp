@@ -23,7 +23,7 @@ namespace glimac {
 		float _speed; /**< The speed of the player and enemies */
 
 	public:
-		Game(const SDLWindowManager& window, const FilePath& applicationPath);
+		Game(const SDLWindowManager& window);
 
 		~Game() {}
 
@@ -32,7 +32,7 @@ namespace glimac {
 		* \brief Renders the current state of the scene and makes the character, camera and foes move.
 		* \param applicationPath Path to main file, cannot be null
 		*/
-		void playGame(const FilePath& applicationPath);
+		void playGame();
 
 		/*!
 		* \fn void gameEvent()
@@ -45,6 +45,6 @@ namespace glimac {
 		* \brief Renders the current scene.
 		* \param applicationPath Path to main file, cannot be null
 		*/
-		void gameRendering(const FilePath& applicationPath);
+		void gameRendering();
 	};
 }

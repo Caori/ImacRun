@@ -2,15 +2,17 @@
 #include "glimac/Game.hpp"
 #include "glimac/SDLWindowManager.hpp"
 #include "glimac/TrackballCamera.hpp"
+#include <glimac/Parameters.hpp>
+#include <glimac/Program.hpp>
 #include <iostream>
 #include <glimac/Image.hpp>
 #include <cmath>
 
 namespace glimac {
 
-	Game::Game(const SDLWindowManager &window, const FilePath& applicationPath)
+	Game::Game(const SDLWindowManager &window)
 		:_windowManager(window),
-		_scene("map1.ppm", applicationPath), 
+		_scene("map1.ppm"), 
 		_character(_scene.getWidth()/2),
 		// les 3 nombres en + : décalage hauteur, profondeur et scale pour les ennemis
 		_foe1(_scene.getWidth()/2+1, 0.3, -6., 0.6),
@@ -20,7 +22,7 @@ namespace glimac {
 		glEnable(GL_DEPTH_TEST);
 	}	
 
-	void Game::playGame(const FilePath& applicationPath) {
+	void Game::playGame() {
 		while(!_done){
 			gameEvent();
 			_trackballCamera.move(_scene._direction, _speed);
@@ -28,7 +30,7 @@ namespace glimac {
 			_foe1._z+=_speed+0.003*cos(_windowManager.getTime());
 			_foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
 			_foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
-			gameRendering(applicationPath);
+			gameRendering();
 		}
 	}
 
@@ -79,8 +81,11 @@ namespace glimac {
         }
     }
 
-    void Game::gameRendering(const FilePath& applicationPath){
+    void Game::gameRendering(){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Program _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/3D.vs.glsl",
+                Parameters::instance().appPath().dirPath() + "shaders/directionallight.fs.glsl"));
+            _Program.use();
 
         glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
         viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
@@ -89,7 +94,7 @@ namespace glimac {
         _foe2.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
         _foe3.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
 
-        _scene.drawScene(viewMatrix, applicationPath, _windowManager);
+        _scene.drawScene(viewMatrix, _windowManager);
 
         _windowManager.swapBuffers();
     }
