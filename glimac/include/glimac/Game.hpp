@@ -16,7 +16,8 @@ namespace glimac {
 		Scene _scene; /**< The current scene with all its objects */
 		Character _character; /**< The object controlled by the player */
 		Character _foe1,_foe2, _foe3; /**< The enemies */
-		TrackballCamera _trackballCamera; /**< The trackball camera */
+		TrackballCamera _camera1, _camera2; /**< The trackball camera */
+		int _cam;
 		bool _done; /**< Used to check if the game is over */
 		bool _pause; /**< Used to check if the game is paused */
 		float _timeTmp; /**< The time passed since the beginning of the game*/
