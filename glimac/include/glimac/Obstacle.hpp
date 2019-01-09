@@ -10,25 +10,33 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include <glimac/Model.hpp>
+
 
 namespace glimac {
-/// \class Obstacle
-/// \brief description...
-class Obstacle : public Object {
-    public:
-        /// \return Obstacle
-        /// \param applicationPath: description...
-        Obstacle(const FilePath& applicationPath);
+	/*!
+	\class Obstacle
+	\brief A class derived of Object used to represent an obstacle
+	*/
+	class Obstacle : public Object {
+	public:
+		const Model& model;
+		
+		Obstacle(const Model& model);
 
-        ~Obstacle() {}
+		~Obstacle() {}
 
-        /// \return void
-        /// \param x: description...
-        /// \param y: description...
-        /// \param camera: description...
-        /// \brief Get the active camera's view matrix, build and send the matrixes
-        /// to the shader, send the material data to the shader and draws a Obstacle.
-        void draw(int i, int j, glm::mat4 &viewMatrix, /*,Camera& camera*/ Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
-};
-
+		/*!
+		* \fn void draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, const FilePath& applicationPath) const
+		* \brief A function derived from Object::draw().
+		    Sends data to the shaders and draws an obstacle.
+		* \param i Corresponding X coordinate in the scene grid
+		* \param j Corresponding Y coordinate in the scene grid 
+		* \param viewMatrix Reference to the active view matrix
+		* \param cube Reference to the scene's cube primitive
+		* \param sphere Reference to the scene's cube primitive
+		* \param applicationPath Path to main file, cannot be null
+		*/
+		void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const;
+	};
 }

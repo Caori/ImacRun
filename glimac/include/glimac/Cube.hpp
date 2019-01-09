@@ -6,39 +6,56 @@
 
 namespace glimac {
 
-class Cube {
-    public:
-        GLuint vao, vbo;
+	class Cube {
+	public:
+		GLuint vao; /**< Vertex array object */
+		GLuint vbo; /**< Vertex buffer object */
 
-        // Constructeur: alloue le tableau de données et construit les attributs des vertex
-        Cube(GLfloat edgeLenght = 0.5):
-            m_nVertexCount(36) {
-            build(edgeLenght); // Construction (voir le .cpp)
-            sendData();
-        }
+		Cube(GLfloat edgeLenght = 0.5)
+			: m_nVertexCount(36) {
+			build(edgeLenght); // Construction (voir le .cpp)
+			sendData();
+		}
 
-        ~Cube(){
-            glDeleteBuffers(1,&vbo);
-            glDeleteVertexArrays(1,&vao);
-        }
+		~Cube(){
+			glDeleteBuffers(1, &vbo);
+			glDeleteVertexArrays(1, &vao);
+		}
 
-        GLsizei getVertexCount(){
-            return m_nVertexCount;
-        }
+		/*! 
+		* \fn inline GLsizei getVertexCount() const
+		* \brief Gets the number of vertices of the cube
+		* \return Const pointer of ShapeVertex
+		*/
+		inline GLsizei getVertexCount(){
+			return m_nVertexCount;
+		}
 
-        // Renvoit le pointeur vers les données
-        const ShapeVertex* getDataPointer() const {
-            return &m_Vertices[0];
-        }
+		 /*! 
+		* \fn inline const ShapeVertex* getDataPointer() const
+		* \brief Gets data pointer
+		* \return Const pointer of ShapeVertex
+		*/
+		inline const ShapeVertex* getDataPointer() const {
+			return &m_Vertices[0];
+		}
 
-    private:
-        std::vector<ShapeVertex> m_Vertices;
-        GLsizei m_nVertexCount; // Nombre de sommets
+	private:
+		std::vector<ShapeVertex> m_Vertices; /**< Vector of vertices */
+		GLsizei m_nVertexCount; /**< Number of vertices */
 
-            // Alloue et construit les données (le paramètre est la longueur de l'arête)
-            void build(GLfloat edgeLenght);
-            //envoie les données aux vao/vbo
-            void sendData();
-};
+		/*!
+		* \fn void build(GLfloat edgeLenght);
+		* \brief Allocates and builds the cube data.
+		* \param edgeLength Lenght of a side
+		*/
+		void build(GLfloat edgeLenght);
+
+		/*! 
+		* \fn void sendData()
+		* \brief Sends data to the vbo and the vao
+		*/
+		void sendData();
+	};
     
 }

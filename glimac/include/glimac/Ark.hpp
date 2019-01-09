@@ -10,25 +10,32 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
-/// \class Ark
-/// \brief description...
-  class Ark : public Object {
-  public:
-    /// \return Ark
-    /// \param applicationPath: description...
-    Ark(const FilePath& applicationPath);
+	/*! \class Ark
+	\brief A class derived of Object used to represent an ark
+	*/
+	class Ark : public Object {
+	public:
+		const Model& model;
 
-    ~Ark() {}
+		Ark(const Model& model);
 
-    /// \return void
-    /// \param x: description...
-    /// \param y: description...
-    /// \param camera: description...
-    /// \brief Get the active camera's view matrix, build and send the matrixes
-    /// to the shader, send the material data to the shader and draws a Ark.
-    void draw(int i, int j, glm::mat4 &viewMatrix/*,Camera& camera*/, Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
-  };
+		~Ark() {}
 
+
+		/*!
+		* \fn void draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, const FilePath& applicationPath) const
+		* \brief A function derived from Object::draw().
+		Sends data to the shaders and draws an ark.
+		* \param i Corresponding X coordinate in the scene grid
+		* \param j Corresponding Y coordinate in the scene grid 
+		* \param viewMatrix Reference to the active view matrix
+		* \param cube Reference to the scene's cube primitive
+		* \param sphere Reference to the scene's sphere primitive
+		* \param window Reference to the game's window
+		*/
+		void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const;
+	};
 }
