@@ -1,7 +1,6 @@
 #include <iostream>
-#include <GL/glew.h>
 #include "glimac/Texture.hpp"
-#include "glimac/Parameters.hpp"
+
 
 namespace glimac {
 

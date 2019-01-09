@@ -35,6 +35,8 @@ namespace glimac {
 		glUniform3f(uKs, 0.5f, 0.5f, 0.5f); //couleur tache speculaire
 		glUniform1f(uShininess, 20);
 
+		glUniform1i(uTexture, 0);
+		glBindTexture(GL_TEXTURE_2D, model.textureID());
 		glBindVertexArray(model.VAO());
 			// height of the arks : 2.0
 			MVMatrix = glm::translate(glm::mat4(1.0),glm::vec3(j, 2.0, -i))*viewMatrix;
@@ -45,5 +47,6 @@ namespace glimac {
 			glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
 			glDrawElements(GL_TRIANGLES, model.geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

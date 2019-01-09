@@ -5,6 +5,7 @@
 #include <glimac/Geometry.hpp>
 #include <glimac/FilePath.hpp>
 #include <glimac/Image.hpp>
+#include "glimac/Parameters.hpp"
 
 
 namespace glimac {

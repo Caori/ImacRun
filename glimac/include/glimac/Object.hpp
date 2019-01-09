@@ -42,6 +42,7 @@ namespace glimac {
 			uKd = glGetUniformLocation(_Program.getGLId(), "uKd");
 			uKs = glGetUniformLocation(_Program.getGLId(), "uKs");
 			uShininess = glGetUniformLocation(_Program.getGLId(), "uShininess");
+			uTexture = glGetUniformLocation(_Program.getGLId(), "uTexture");
 		}
 
 		~Object() {}
