@@ -1,10 +1,14 @@
 #pragma once
 
+#include <glimac/SDLWindowManager.hpp>
+#include <glimac/Parameters.hpp>
+
 #include <glimac/Character.hpp>
 #include <glimac/Scene.hpp>
 #include <glimac/Menu.hpp>
-#include <glimac/SDLWindowManager.hpp>
 #include "glimac/Model.hpp"
+#include "glimac/DirectionalLight.hpp"
+#include "glimac/TrackballCamera.hpp"
 
 namespace glimac {
 	/*!
@@ -17,15 +21,16 @@ namespace glimac {
 		Scene _scene; /**< The current scene with all its objects */
 		Character _character; /**< The object controlled by the player */
 		Character _foe1,_foe2, _foe3; /**< The enemies */
-		TrackballCamera _trackballCamera; /**< The trackball camera */
+		TrackballCamera _camera1, _camera2; /**< The trackball camera */
+		int _cam;
 		bool _done; /**< Used to check if the game is over */
-		int _pause; /**< Used to check if the game is paused */
-		int _menu; /**< Used to check which menu is open */
+		int _pause; /**< Used to check if the game is open */
+		int _menu; /**< Used to check whiwh the menu is paused */
 		float _timeTmp; /**< The time passed since the beginning of the game*/
 		float _speed; /**< The speed of the player and enemies */
 
 	public:
-		Game(const SDLWindowManager& window, const FilePath& applicationPath);
+		Game(const SDLWindowManager& window);
 
 		~Game() {}
 

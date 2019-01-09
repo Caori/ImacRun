@@ -12,8 +12,8 @@
 */
 using namespace glimac;
 
-const uint32_t width = 800;
-const uint32_t height = 600;
+const uint32_t width = 1200;
+const uint32_t height = 900;
 
 int main(int argc, char** argv) {
     // Initialize glew for OpenGL3+ support
@@ -31,7 +31,11 @@ int main(int argc, char** argv) {
         std::cerr << e.what() <<std::endl;
     }
 
+	//ICI MENU	
+	//qui return start game si on clic sur start
 	startGame(windowManager, Parameters.appPath());
+
+	//dans la fonction startGame (cf. Gamemanager.cpp)  si bool pause ==1 --> afficher pause
 
     return EXIT_SUCCESS;
 }

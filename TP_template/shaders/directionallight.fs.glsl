@@ -2,6 +2,7 @@
 
 in vec3 vPosition_vs;
 in vec3 vNormal_vs;
+in vec2 vTexCoords;
 
 //infos sur le materiau de l'objet
 uniform vec3 uKd; //couleur de l'objet (diffus)
@@ -10,6 +11,8 @@ uniform float uShininess;
 //infos sur la lumière
 uniform vec3 uLightDir_vs;
 uniform vec3 uLightIntensity;
+
+uniform sampler2D uTexture;
 
 out vec3 fFragColor;
 
@@ -32,6 +35,5 @@ vec3 blinnPhong() {
 }
 
 void main() {
-    //fFragColor = normalize(vNormal_vs);
-    fFragColor = blinnPhong();
+    fFragColor = blinnPhong()*texture(uTexture, vTexCoords).xyz;
 }

@@ -18,35 +18,36 @@
 namespace glimac {
 
     Character::Character(float demiLargeur, float y, float z, float scale)
-        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object() {
+        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isAlive(0), _isCrouched(0), Object() {
     }
 
-    void Character::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
+    void Character::draw(int i, int j, glm::mat4 &viewMatrix, SDLWindowManager &window) const {
         //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
-        glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
+        glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),1200.f/900.f ,0.1f,100.f);
         
         glUniform3f(uKd, 0.5f, 0.5f, 0.5f); //couleur diffuse
         glUniform3f(uKs, 0.5f, 0.5f, 0.5f); //couleur tache speculaire
         glUniform1f(uShininess, 20);
 
-        //glBindVertexArray(AssetLoader::instance().models()["cat"].VAO());
-        glBindVertexArray(cube.vao);
+        glUniform1i(uTexture, 0);
+        glBindTexture(GL_TEXTURE_2D, AssetLoader::instance().models()["cube"].textureID());
+
+        glBindVertexArray(AssetLoader::instance().models()["cube"].VAO());
             glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
             MVMatrix = glm::scale(MVMatrix, glm::vec3(0.5, _scale*1.5, 0.6));
-            //MVMatrix = glm::scale(MVMatrix, glm::vec3(0.1, 0.1, 0.1));
             glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
             glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
             glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
             glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
-            //glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cat"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
-            glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
+            glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cube"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     void Character::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position) {
         fallTest(grid);
         if (_isFalling){
-            _y -= 0.08;
+            _y -= Parameters::instance().getSpeed()*2;
         }
         moveFront(grid, speed, position);
         if (_jump !=0){
@@ -64,7 +65,7 @@ namespace glimac {
         int blocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y];
         int upblocType = grid[grid.size()-_zGrid-1][grid[0].size()-_xGrid][_y+1];
         if ((blocType != 4 && blocType != 5 && blocType != 3)&&(upblocType != 3)||_jump==3){
-            _z+=speed;//0.2 c'est la vitesse de défillement de la caméra
+            _z+=speed;
             if (position == "NORD"){
                 _zGrid+=speed;
             }
@@ -104,6 +105,7 @@ namespace glimac {
                 }
                 else{
                     std::cout<<"GAME OVER"<<std::endl;
+                    _isAlive = 1;
                 }
             }
         }
@@ -113,7 +115,8 @@ namespace glimac {
     void Character::jump(const std::vector< std::vector< std::vector<int>>>& grid) {
         int upblocType = grid[grid.size()-_zGrid][grid[0].size()-int(_xGrid)][int(_y)+1];
         int downblocType = grid[grid.size()-_zGrid][grid[0].size()-(_xGrid)][int(_y)];
-        if (upblocType !=3 && _jump==1){//s'il n'est pas sous une arche et qu'il n'est pas deja en train de sauter
+
+        if (upblocType !=3 && _jump==1 && _isFalling!=1){//s'il n'est pas sous une arche et qu'il n'est pas deja en train de sauter ni en train de tomber
             _jump=2;
         }
         if (_jump ==2){
@@ -122,7 +125,7 @@ namespace glimac {
             }
             else{
                 //if(upblocType !=3){
-                    _y+=0.04;
+                    _y+=Parameters::instance().getSpeed()*3;
                 //}
             } 
         }     
@@ -132,7 +135,7 @@ namespace glimac {
             }
             else{
                 if(downblocType != 4){
-                    _y-=0.04;    
+                    _y-=Parameters::instance().getSpeed()*3;    
                 }
             }
         }                                                         
@@ -250,6 +253,7 @@ namespace glimac {
             if (_isFalling == 0){
                 std::cout<<"Faaaaallllllllllllllllllll !"<<std::endl<<"GAME OVER"<<std::endl;
                 _isFalling = 1; 
+                _isAlive = 1;
             }
         }
     }

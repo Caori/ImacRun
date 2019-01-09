@@ -40,6 +40,11 @@ namespace glimac {
 		// NON-CONST GETTERS (can be used as setters)
 		/// \brief set the application path
 		glimac::FilePath& appPath() { return _appPath; };
+
+		/// \brief get the running speed
+		const float getSpeed(){
+			return _speed;
+		}
 		
 	// MEMBERS
 	private:
@@ -52,5 +57,7 @@ namespace glimac {
 		const Uint32 _framerate_ms = 1000 / 30;
 		/// \brief time between 2 frames (seconds)
 		const float _deltaTime = 1.f/30.f;
+		/// \brief running speed
+		const float _speed = 0.1;
 	};
 }

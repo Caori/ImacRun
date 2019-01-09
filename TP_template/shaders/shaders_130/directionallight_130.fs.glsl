@@ -24,7 +24,6 @@ vec3 blinnPhong() {
   vec3 w0 = normalize(-vPosition_vs);
   vec3 h = normalize((w0 + wi)/2);
 
-
   vec3 KD = uKd * prodScal(wi, vNormal_vs);
   vec3 KS = uKs * pow(prodScal(h, vNormal_vs), uShininess);
 

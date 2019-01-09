@@ -6,11 +6,12 @@
 #include <glimac/Program.hpp>
 #include <iostream>
 #include <glimac/Image.hpp>
+#include <glimac/DirectionalLight.hpp>
 #include <cmath>
 
 namespace glimac {
 
-	Game::Game(const SDLWindowManager &window, const FilePath& applicationPath)
+	Game::Game(const SDLWindowManager &window)
 		:_windowManager(window),
 		_scene("map1.ppm"), 
 		_character(_scene.getWidth()/2),
@@ -18,35 +19,60 @@ namespace glimac {
 		_foe1(_scene.getWidth()/2+1, 0.3, -6., 0.6),
 		_foe2(_scene.getWidth()/2,  0.3, -6.,  0.7),
 		_foe3(_scene.getWidth()/2-1, 0.3, -6.,  0.65),
-		_done(false), _pause(2), _menu(0), _speed(0.1) {
+        _camera1(TrackballCamera()),
+        _camera2(TrackballCamera(0, 0, 1.5)),
+        _cam(2),
+		_done(false), _pause(2), _menu(0), _speed(Parameters::instance().getSpeed()) {
 		glEnable(GL_DEPTH_TEST);
 	}	
 
 	void Game::playGame(const FilePath& applicationPath) {
-        Menu menus(applicationPath);
-        GLuint menuBackgrounds = menus.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png",applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
+         Menu menus(applicationPath);
+        GLuint menuBackgrounds = menus.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png",
+            applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", 
+            applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
 
 		while(!_done){
 			gameEvent();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            if(_pause == 2){
+           if(_pause == 2){
                 menus.displayMenu(_windowManager, &menuBackgrounds, 0);
                 //_menu = 0;
             }
 
-			if(_pause == 0){
-                _trackballCamera.move(_scene._direction, _speed);
-                _character.move(_scene._grid, _speed, _scene._direction);
-                _foe1._z+=_speed+0.003*cos(_windowManager.getTime());
-                _foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
-                _foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
-                gameRendering();
+           if(_character._isAlive == 1){
+                menus.displayMenu(_windowManager, &menuBackgrounds, 2);
+                _pause = 3;
+                _menu = 2;
+            }
+
+           if(_pause == 1){
+                menus.displayMenu(_windowManager, &menuBackgrounds, 1);
+                _menu = 1;
+            }
+
+            if(_pause == 0){
+    			_camera1.move(_scene._direction, _speed);
+                _camera2.setDistance(-_character._z-1);
+                _camera2.setLeft(_character._x-50);
+                _camera2.setUp(_character._y+0.5);
+    			_character.move(_scene._grid, _speed, _scene._direction);
+    			_foe1._z+=_speed+0.003*cos(_windowManager.getTime());
+    			_foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
+    			_foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
+                if(_foe2._z >= _character._z){
+                    std::cout<<"LOOOOOSE"<<std::endl;
+                }
+    			gameRendering();
             }
             _windowManager.swapBuffers();
 		}
         glDeleteTextures(3,(GLuint*)(&menuBackgrounds));
+        /*glDeleteTextures(1, (GLuint*)(&scoreTexture));
+        TTF_CloseFont(font);
+        TTF_Quit();*/
 	}
 
     void Game::gameEvent(){
@@ -82,24 +108,48 @@ namespace glimac {
                     if(_windowManager.isKeyPressed(SDLK_SPACE) == true){
                         if (_pause==0){_pause=1;}
                         else {_pause=0;}
-                        _speed = 0.03*(1-_pause);
+                        _speed = Parameters::instance().getSpeed()*(1-_pause);
+                    }
+                    if(_windowManager.isKeyPressed(SDLK_c) == true){
+                        if (_cam==1){_cam=2;}
+                        else{
+                            _cam=1;
+                        }
                     }
                     break;
 
+                // Menus : 0 = main menu, 1 = pause, 2 = game over
                 case SDL_MOUSEBUTTONDOWN:
                     if(_menu == 0){
                         if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
                             
                             // bouton width : 400 px
-                            if(mousePosX >= 200 && mousePosX <= 600){
+                            if(mousePosX >= 300 && mousePosX <= 900){
                                 // leave
-                                if(mousePosY >= 250 && mousePosY <= 350){
+                                if(mousePosY >= 380 && mousePosY <= 530){
                                     _done = true;
                                 }
                                 // play
-                                if(mousePosY >= 120 && mousePosY <= 220){
+                                if(mousePosY >= 180 && mousePosY <= 330){
                                     _pause = 0;
                                 }
+                            }
+                        }
+                    }
+                   if(_menu == 1){
+                        if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
+                            if(mousePosX >=300 && mousePosX <= 900
+                                && mousePosY >= 380 && mousePosY <= 530){
+                                _pause = 0;
+                                _speed = 0.1*(1-_pause);
+                            }
+                        }
+                    }
+                    if(_menu == 2){
+                        if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
+                            if(mousePosX >=300 && mousePosX <= 900
+                                && mousePosY >= 380 && mousePosY <= 530){
+                                _done = true;
                             }
                         }
                     }
@@ -123,16 +173,22 @@ namespace glimac {
         
         Program _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/3D.vs.glsl",
                 Parameters::instance().appPath().dirPath() + "shaders/directionallight.fs.glsl"));
-            _Program.use();
+        _Program.use();
+        glm::mat4 viewMatrix;
+        if (_cam==1){
+            viewMatrix = _camera1.getViewMatrix();
+            _character.draw(0, 0, viewMatrix, _windowManager);
+        }
+        else{
+            viewMatrix = _camera2.getViewMatrix();
+        }
+        DirectionalLight light;
+        light.drawLight(viewMatrix, glm::vec4(0.5f, 1, 1, 0));
 
-        glm::mat4 viewMatrix = _trackballCamera.getViewMatrix();
-        viewMatrix = glm::translate(viewMatrix, glm::vec3(0, -4.f, -5.f));
-        _character.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
-        _foe1.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
-        _foe2.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
-        _foe3.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
+        _foe1.draw(0, 0, viewMatrix, _windowManager);
+        _foe2.draw(0, 0, viewMatrix, _windowManager);
+        _foe3.draw(0, 0, viewMatrix, _windowManager);
 
         _scene.drawScene(viewMatrix, _windowManager);
-
     }
 }

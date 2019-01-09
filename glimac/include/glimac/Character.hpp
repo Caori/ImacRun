@@ -2,15 +2,19 @@
 
 #include <iostream>
 #include <stdlib.h>
-
-#include "glm.hpp"
-#include "common.hpp"
-#include "FilePath.hpp"
-#include "Object.hpp"
-#include "Camera.hpp"
-#include "Cube.hpp"
-#include "glimac/Sphere.hpp"
 #include <string>
+
+#include "glimac/glm.hpp"
+#include "glimac/common.hpp"
+#include "glimac/FilePath.hpp"
+#include "glimac/Object.hpp"
+#include "glimac/Camera.hpp"
+#include "glimac/Object.hpp"
+#include "glimac/Sphere.hpp"
+#include "glimac/Scene.hpp"
+#include "glimac/MapTransformation.hpp"
+#include "glimac/AssetLoader.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*! \class Character
@@ -23,11 +27,12 @@ namespace glimac {
 		float _scale;
 		/// \return Coin
 		int _score;
-		int _jump; //ceci est un booléen
+		int _jump; //ceci est un état
 		bool _isFalling;
 		bool _isCrouched;
+		bool _isAlive;
 
-		Character(float demiLargeur, float y=0, float z=0., float _scale=1.);
+		Character(float demiLargeur, float y=0, float z=+0.3, float _scale=1.);
 
 		~Character() {}
 
@@ -41,7 +46,7 @@ namespace glimac {
 		* \param cube Reference to the scene's cube primitive
 		* \param sphere Reference to the scene's cube primitive
 		*/
-		void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
+		void draw(int i, int j, glm::mat4& viewMatrix, SDLWindowManager &window) const;
 		
 		/*!
 		* \fn void move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position)

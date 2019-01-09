@@ -1,26 +1,4 @@
 #include "glimac/Scene.hpp"
-#include "glimac/Exception.hpp"
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <glimac/Cube.hpp>
-#include <glimac/Sphere.hpp>
-#include <glimac/SDLWindowManager.hpp>
-#include <glimac/Object.hpp>
-#include <glimac/Ground.hpp>
-#include <glimac/Wall.hpp>
-#include <glimac/Coin.hpp>
-#include <glimac/Ark.hpp>
-#include <glimac/Obstacle.hpp>
-#include <glimac/Light.hpp>
-#include <glimac/DirectionalLight.hpp>
-#include <GL/glew.h>
-#include <string>
-#include <glimac/Image.hpp>
-#include "glimac/AssetLoader.hpp"
-#include <glimac/Model.hpp>
-#include <glimac/Parameters.hpp>
 
 namespace glimac {
 
@@ -51,26 +29,32 @@ namespace glimac {
 		for (int i=0; i<_grid.size(); i++){
 	    	for (int j=0; j<_grid[0].size(); j++){
 	    		if (_grid[i][j][0] == 1){
-	    			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+	    			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 	    		}
 				if (_grid[i][j][0] == 2){
 					switch(_grid[i][j][2]){
 						case 0:
-							coin1.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							coin1.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 						case 1:
-							coin2.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							coin2.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 						case 2:
-							coin3.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);			
+							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							coin3.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);			
 					}
 	    		}
 				if ( _grid[i][j][0] == 3){
-					ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 				if (_grid[i][j][0] == 4){
-					obstacle.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					obstacle.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 				if (_grid[i][j][0] == 5){
-	    			wall.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+	    			wall.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 	    	}
 	    }
