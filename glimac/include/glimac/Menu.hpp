@@ -32,8 +32,8 @@ namespace glimac{
 		
 		public:
 			Menu(const FilePath& applicationPath)
-			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/shaders_130/tex2D.vs.glsl",
-	                                  applicationPath.dirPath() + "shaders/shaders_130/multiTex2D.fs.glsl"))
+			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/tex2D.vs.glsl",
+	                                  applicationPath.dirPath() + "shaders/multiTex2D.fs.glsl"))
 
 			{
 				_Program.use();

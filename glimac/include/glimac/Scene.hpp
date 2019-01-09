@@ -9,6 +9,9 @@
 #include <glimac/Ground.hpp>
 #include <glimac/TrackballCamera.hpp>
 #include <glimac/Character.hpp>
+#include <glimac/Model.hpp>
+#include <glimac/Light.hpp>
+#include <glimac/DirectionalLight.hpp>
 #include <string>
 
 namespace glimac {
@@ -17,7 +20,7 @@ namespace glimac {
 	\brief A class used to represent the game environment.
 		Stores the primitive elements used in the environment;
 	*/
-	class Scene{
+	class Scene {
 	public:
 		/*
 		Light _lights[];
@@ -29,7 +32,7 @@ namespace glimac {
 		std::string _direction;
 		std::vector< std::vector< std::vector<int>>> _grid;
 
-		Scene(const std::string &map, const FilePath& applicationPath);
+		Scene(const std::string &map);
 
 		~Scene() {}
 
@@ -40,7 +43,7 @@ namespace glimac {
 		* \param applicationPath Path to main file, cannot be null
 		* \return 3D vector of integers
 		*/
-		std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map, const FilePath& applicationPath);
+		std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map);
 
 		/*!
 		* \fn inline int getWidth()
@@ -58,6 +61,6 @@ namespace glimac {
 		* \param applicationPath Path to main file, cannot be null
 		* \param windowManager Reference to the current window manager
 		*/
-		void drawScene(glm::mat4& viewMatrix, const FilePath& applicationPath, SDLWindowManager& windowManager);
+		void drawScene(glm::mat4& viewMatrix, SDLWindowManager& windowManager);
 	};
 }

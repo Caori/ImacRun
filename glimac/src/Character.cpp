@@ -12,23 +12,33 @@
 #include "glimac/Sphere.hpp"
 #include "glimac/Scene.hpp"
 #include "glimac/MapTransformation.hpp"
+#include "glimac/AssetLoader.hpp"
+#include <glimac/Model.hpp>
 
 namespace glimac {
 
-    Character::Character(const FilePath& applicationPath, float demiLargeur, float y, float z, float scale)
-        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isAlive(0), _isCrouched(0), Object(applicationPath) {
+    Character::Character(float demiLargeur, float y, float z, float scale)
+        :_x(demiLargeur), _xGrid(demiLargeur), _y(1.-y), _z(z), _zGrid(0.), _scale(scale), _score(0), _jump(0), _isFalling(0), _isCrouched(0), Object() {
     }
 
     void Character::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
         //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
         glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
+        
+        glUniform3f(uKd, 0.5f, 0.5f, 0.5f); //couleur diffuse
+        glUniform3f(uKs, 0.5f, 0.5f, 0.5f); //couleur tache speculaire
+        glUniform1f(uShininess, 20);
+
+        //glBindVertexArray(AssetLoader::instance().models()["cat"].VAO());
         glBindVertexArray(cube.vao);
             glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
             MVMatrix = glm::scale(MVMatrix, glm::vec3(0.5, _scale*1.5, 0.6));
+            //MVMatrix = glm::scale(MVMatrix, glm::vec3(0.1, 0.1, 0.1));
             glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
             glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
             glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
             glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
+            //glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cat"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
             glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
         glBindVertexArray(0);
     }
@@ -76,7 +86,6 @@ namespace glimac {
             }
         }
         else{
-            // ark
             if (upblocType==3 || blocType==3){
                 if (_scale<1.f){
                     _z+=speed;
@@ -94,7 +103,6 @@ namespace glimac {
                     }
                 }
                 else{
-                    _isAlive = 1;
                     std::cout<<"GAME OVER"<<std::endl;
                 }
             }
@@ -242,7 +250,6 @@ namespace glimac {
             if (_isFalling == 0){
                 std::cout<<"Faaaaallllllllllllllllllll !"<<std::endl<<"GAME OVER"<<std::endl;
                 _isFalling = 1; 
-                _isAlive = 1;
             }
         }
     }

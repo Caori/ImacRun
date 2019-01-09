@@ -4,7 +4,7 @@
 namespace glimac {
 
 SDLWindowManager::SDLWindowManager(uint32_t width = 800, uint32_t height = 600, const char* title = "ImacRun") {
-    if(0 != SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
+    if(0 != SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << SDL_GetError() << std::endl;
         return;
     }

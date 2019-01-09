@@ -16,7 +16,7 @@ namespace glimac {
 		GLint uLightDir_vs; /**< Light direction */
 
 	public:
-		DirectionalLight(const FilePath& applicationPath);
+		DirectionalLight();
 
 		~DirectionalLight() {}
 

@@ -6,6 +6,8 @@
 #include <glimac/Program.hpp>
 #include <glimac/FilePath.hpp>
 #include "glimac/common.hpp"
+#include <glimac/Parameters.hpp>
+
 
 namespace glimac {
 	/*! \class Light
@@ -18,9 +20,9 @@ namespace glimac {
 		GLint uLightIntensity; /**< The uniform location of the light intensity*/
 
 	public:
-		Light(const FilePath& applicationPath)
-			: _Program(loadProgram(applicationPath.dirPath() + "shaders/shaders_130/3D_130.vs.glsl",
-				applicationPath.dirPath() + "shaders/shaders_130/directionallight_130.fs.glsl")) {
+		Light()
+			: _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/3D.vs.glsl",
+				Parameters::instance().appPath().dirPath() + "shaders/directionallight.fs.glsl")) {
 			_Program.use();
 			uLightIntensity = glGetUniformLocation(_Program.getGLId(), "uLightIntensity");
 		}

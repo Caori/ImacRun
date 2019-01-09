@@ -23,12 +23,11 @@ namespace glimac {
 		float _scale;
 		/// \return Coin
 		int _score;
-		int _jump; 
+		int _jump; //ceci est un booléen
 		bool _isFalling;
-		bool _isAlive;
 		bool _isCrouched;
 
-		Character(const FilePath& applicationPath, float demiLargeur, float y=0, float z=0., float _scale=1.);
+		Character(float demiLargeur, float y=0, float z=0., float _scale=1.);
 
 		~Character() {}
 

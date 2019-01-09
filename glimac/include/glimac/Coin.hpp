@@ -10,6 +10,7 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*!
@@ -19,8 +20,9 @@ namespace glimac {
 	class Coin : public Object {
 	public:
 		int _value;
+		const Model& model;
 
-		Coin(const FilePath& applicationPath, int value);
+		Coin(int value, const Model& model);
 
 		~Coin() {}
 

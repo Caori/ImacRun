@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include "glimac/GameManager.hpp"
 #include "glimac/Game.hpp"
+#include "glimac/Parameters.hpp"
 
 /*! \namespace glimac
     \brief A namespace with all the classes used in the program.
@@ -18,7 +19,10 @@ int main(int argc, char** argv) {
     // Initialize glew for OpenGL3+ support
     SDLWindowManager windowManager(width, height, "IMACRUN");
 
-    FilePath applicationPath(argv[0]);
+    //FilePath applicationPath(argv[0]);
+
+    Parameters& Parameters = Parameters::instance();
+    Parameters.appPath() = FilePath(argv[0]);
 
     try{
 		initialisation();    	
@@ -27,9 +31,7 @@ int main(int argc, char** argv) {
         std::cerr << e.what() <<std::endl;
     }
 
-	startGame(windowManager, applicationPath);
-
-	//dans la fonction startGame (cf. Gamemanager.cpp)  si bool pause ==1 --> afficher pause
+	startGame(windowManager, Parameters.appPath());
 
     return EXIT_SUCCESS;
 }

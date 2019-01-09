@@ -17,31 +17,35 @@
 #include <glimac/DirectionalLight.hpp>
 #include <GL/glew.h>
 #include <string>
-#include <glimac/Light.hpp>
 #include <glimac/Image.hpp>
+#include "glimac/AssetLoader.hpp"
+#include <glimac/Model.hpp>
+#include <glimac/Parameters.hpp>
 
 namespace glimac {
 
-	Scene::Scene(const std::string& map, const FilePath& applicationPath)
+	Scene::Scene(const std::string& map)
 		:_posX(0), _posZ(0), _direction("NORD") {
 		//camera, lights à faire
 		try {
-			_grid = readPPM(map, applicationPath);
+			_grid = readPPM(map);
 		}
 		catch (const Exception &e) {
 			std::cerr << e.what() << std::endl;
 		}
 	}
 
-	void Scene::drawScene(glm::mat4& viewMatrix, const FilePath& applicationPath, SDLWindowManager& windowManager){
-		Ground ground(applicationPath, "directionallight.fs.glsl");
-		Wall wall(applicationPath);
-		Coin coin1(applicationPath, 1);
-		Coin coin2(applicationPath, 2);
-		Coin coin3(applicationPath, 3);
-		Ark ark(applicationPath);
-		Obstacle obstacle(applicationPath);
-		DirectionalLight light(applicationPath);
+	void Scene::drawScene(glm::mat4& viewMatrix, SDLWindowManager& windowManager){
+
+		Ground ground(AssetLoader::instance().models()["cube"]);
+		Wall wall(AssetLoader::instance().models()["barrel"]);
+		Coin coin1(1, AssetLoader::instance().models()["coin"]);
+		Coin coin2(2, AssetLoader::instance().models()["coin"]);
+		Coin coin3(3, AssetLoader::instance().models()["coin"]);
+		Ark ark(AssetLoader::instance().models()["bird"]);
+		Obstacle obstacle(AssetLoader::instance().models()["cat"]);
+
+		DirectionalLight light;
 		light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
 
 		for (int i=0; i<_grid.size(); i++){
@@ -72,8 +76,8 @@ namespace glimac {
 	    }
 	}
 
-	std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &map, const FilePath& applicationPath){
-		std::ifstream file(applicationPath.dirPath() + "../../ImacRun/assets/maps/"+map, std::ios::in);
+	std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &map){
+		std::ifstream file(Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/maps/" + map, std::ios::in);
 			if(!file){
 				THROW_EXCEPTION("Impossible de lire le fichier PPM");
 			}
@@ -145,9 +149,7 @@ namespace glimac {
 						}
 					}
 				}
-				//std::cout<<grid[i][j][0]<<" ";
 			}
-			//std::cout<<std::endl;
 		}
 
 		file.close();

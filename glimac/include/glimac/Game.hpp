@@ -3,8 +3,8 @@
 #include <glimac/Character.hpp>
 #include <glimac/Scene.hpp>
 #include <glimac/Menu.hpp>
-#include <glimac/FreeflyCamera.hpp>
 #include <glimac/SDLWindowManager.hpp>
+#include "glimac/Model.hpp"
 
 namespace glimac {
 	/*!
@@ -18,11 +18,9 @@ namespace glimac {
 		Character _character; /**< The object controlled by the player */
 		Character _foe1,_foe2, _foe3; /**< The enemies */
 		TrackballCamera _trackballCamera; /**< The trackball camera */
-		FreeflyCamera _freeflyCamera; /**< The freefly camera */
 		bool _done; /**< Used to check if the game is over */
-		int _pause; /**< Used to check if the game is started/paused/over */
+		int _pause; /**< Used to check if the game is paused */
 		int _menu; /**< Used to check which menu is open */
-		bool _camera; /**< Used to check which camera is used */
 		float _timeTmp; /**< The time passed since the beginning of the game*/
 		float _speed; /**< The speed of the player and enemies */
 
@@ -49,6 +47,6 @@ namespace glimac {
 		* \brief Renders the current scene.
 		* \param applicationPath Path to main file, cannot be null
 		*/
-		void gameRendering(const FilePath& applicationPath, glm::mat4 viewmatrix);
+		void gameRendering();
 	};
 }

@@ -10,6 +10,8 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "glimac/Sphere.hpp"
+#include <glimac/Model.hpp>
+
 
 namespace glimac {
 	/*!
@@ -18,7 +20,9 @@ namespace glimac {
 	*/
 	class Obstacle : public Object {
 	public:
-		Obstacle(const FilePath& applicationPath);
+		const Model& model;
+		
+		Obstacle(const Model& model);
 
 		~Obstacle() {}
 
