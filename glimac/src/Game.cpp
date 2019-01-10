@@ -45,8 +45,13 @@ namespace glimac {
             Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", 
             Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
 
+<<<<<<< HEAD
         /*Score score;
         TTF_Font *font = TTF_OpenFont("../../ImacRun/assets/fonts/space_age.ttf", 100);
+=======
+        Score score;
+        TTF_Font *font = TTF_OpenFont("/home/solane/Documents/Synthèse d'image/Projet_manon/ImacRun/assets/fonts/space_age.ttf", 100);
+>>>>>>> f15a6f1ffbcd57156249c656d48f58d8792c6c89
         SDL_Color color = {255,0,0,0}; // font color
         unsigned int size = 100; // font size
         std::string message = "Score : " + std::to_string(_player._score);
