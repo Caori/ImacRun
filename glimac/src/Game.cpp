@@ -30,6 +30,7 @@ namespace glimac {
 
     Game::~Game(){
         for_each(_foes.begin(), _foes.end(), [&](Foe* foe){delete(foe);});
+        _foes.erase(_foes.begin(), _foes.end());
     }
 
 	void Game::playGame() {

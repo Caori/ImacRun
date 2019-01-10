@@ -46,6 +46,7 @@ namespace glimac {
 	Scene::~Scene(){
 		for(std::map<std::string, Object*>::iterator it=_objects.begin(); it!=_objects.end(); it++){
 			delete(it->second);
+			_objects.erase(it);
 		}
 	}
 
