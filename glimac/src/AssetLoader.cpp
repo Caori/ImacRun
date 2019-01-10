@@ -10,10 +10,7 @@ namespace glimac {
 	void AssetLoader::loadAssets() {
 		std::cout << "AssetLoader : Load assets" << std::endl;
 
-<<<<<<< HEAD
 		_models.insert(std::make_pair("menu", 			Model("menu", "Menu-player.png")));
-=======
->>>>>>> f15a6f1ffbcd57156249c656d48f58d8792c6c89
 		_models.insert(std::make_pair("coin", 			Model("coin", "metal.jpeg")));
 		_models.insert(std::make_pair("cat", 			Model("cat", "sky.jpeg")));
 		_models.insert(std::make_pair("bird",			Model("bird", "feathers.jpeg")));
