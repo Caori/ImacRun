@@ -28,6 +28,10 @@ namespace glimac {
     		glEnable(GL_DEPTH_TEST);
 	}	
 
+    Game::~Game(){
+        for_each(_foes.begin(), _foes.end(), [&](Foe* foe){delete(foe);});
+    }
+
 	void Game::playGame() {
 		while(!_done){
 			gameEvent();

@@ -21,6 +21,7 @@
 #include "glimac/AssetLoader.hpp"
 #include <glimac/Model.hpp>
 #include <glimac/Parameters.hpp>
+#include <algorithm>
 
 namespace glimac {
 
@@ -42,18 +43,14 @@ namespace glimac {
 		}
 	}
 
+	Scene::~Scene(){
+		for(std::map<std::string, Object*>::iterator it=_objects.begin(); it!=_objects.end(); it++){
+			delete(it->second);
+		}
+	}
+
 	void Scene::drawScene(glm::mat4& viewMatrix, SDLWindowManager& windowManager){
-/*
-		Ground ground(AssetLoader::instance().models()["cube"]);
-		Wall wall(AssetLoader::instance().models()["barrel"]);
-		Coin coin1(1, AssetLoader::instance().models()["coin"]);
-		Coin coin2(2, AssetLoader::instance().models()["coin"]);
-		Coin coin3(3, AssetLoader::instance().models()["coin"]);
-		Ark ark(AssetLoader::instance().models()["bird"]);
-		Obstacle obstacle(AssetLoader::instance().models()["cat"]);*/
-
 		_light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
-
 		for (int i=0; i<_grid.size(); i++){
 	    	for (int j=0; j<_grid[0].size(); j++){
 	    		if (_grid[i][j][0] == 1){

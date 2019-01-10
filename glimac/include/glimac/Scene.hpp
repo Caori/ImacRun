@@ -37,7 +37,7 @@ namespace glimac {
 
 		Scene(const std::string &map);
 
-		~Scene() {}
+		~Scene();
 
 		/*!
 		* \fn std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map, const FilePath& applicationPath)

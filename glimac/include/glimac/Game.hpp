@@ -27,7 +27,7 @@ namespace glimac {
 	public:
 		Game(const SDLWindowManager& window);
 
-		~Game() {}
+		~Game();
 
 		/*!
 		* \fn void playGame(const FilePath& applicationPath)
