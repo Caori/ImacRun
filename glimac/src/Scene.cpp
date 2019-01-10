@@ -33,7 +33,7 @@ namespace glimac {
 		_objects["Coin2"] = new Coin(2, AssetLoader::instance().models()["coin"]);
 		_objects["Coin3"] = new Coin(3, AssetLoader::instance().models()["coin"]);
 		_objects["Ark"] = new Ark(AssetLoader::instance().models()["bird"]);
-		_objects["Obstacle"] = new Obstacle(AssetLoader::instance().models()["cat"]);
+		_objects["Obstacle"] = new Obstacle(AssetLoader::instance().models()["rock"]);
 		//camera, lights à faire
 		try {
 			_grid = readPPM(map);
@@ -51,30 +51,36 @@ namespace glimac {
 	}
 
 	void Scene::drawScene(glm::mat4& viewMatrix, SDLWindowManager& windowManager){
-		_light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
+		_light.drawLight(viewMatrix, glm::vec4(0, 1, 0.5f, 0));
 		for (int i=0; i<_grid.size(); i++){
 	    	for (int j=0; j<_grid[0].size(); j++){
 	    		if (_grid[i][j][0] == 1){
-	    			_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+	    			_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 	    		}
 				if (_grid[i][j][0] == 2){
 					switch(_grid[i][j][2]){
 						case 0:
-							_objects["Coin1"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+							_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							_objects["Coin1"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 						case 1:
-							_objects["Coin2"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+							_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							_objects["Coin2"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix,  windowManager);
 						case 2:
-							_objects["Coin3"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);			
+							_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							_objects["Coin3"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);			
 					}
 	    		}
 				if ( _grid[i][j][0] == 3){
-					_objects["Ark"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					_objects["Ark"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 				if (_grid[i][j][0] == 4){
-					_objects["Obstacle"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					_objects["Obstacle"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 				if (_grid[i][j][0] == 5){
-	    			_objects["Wall"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
+					_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+	    			_objects["Wall"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
 				}
 	    	}
 	    }

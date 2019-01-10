@@ -25,7 +25,7 @@ namespace glimac {
 		:Character(demiLargeur, y, z, scale){
 	}
 
-	void Foe::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
+	void Foe::draw(int i, int j, glm::mat4 &viewMatrix, SDLWindowManager &window) const {
         //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
         glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
         
@@ -33,18 +33,19 @@ namespace glimac {
         glUniform3f(uKs, 0.5f, 0.5f, 0.5f); //couleur tache speculaire
         glUniform1f(uShininess, 20);
 
-        //glBindVertexArray(AssetLoader::instance().models()["cat"].VAO());
-        glBindVertexArray(cube.vao);
+        glUniform1i(uTexture, 0);
+        glBindTexture(GL_TEXTURE_2D, AssetLoader::instance().models()["cat"].textureID());
+        glBindVertexArray(AssetLoader::instance().models()["cat"].VAO());
             glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
-            MVMatrix = glm::scale(MVMatrix, glm::vec3(0.5, _scale*1.5, 0.6));
-            //MVMatrix = glm::scale(MVMatrix, glm::vec3(0.1, 0.1, 0.1));
+            MVMatrix = glm::scale(MVMatrix, glm::vec3(0.1, 0.1, 0.1));
+            MVMatrix = glm::rotate(MVMatrix, 3.2f, glm::vec3(0.0, 1, 0.0));
             glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
             glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
             glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
             glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
-            //glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cat"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
-            glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
+            glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cat"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
 
@@ -53,7 +54,7 @@ namespace glimac {
         :_xGrid(demiLargeur), _zGrid(0.), _score(0), _jump(0), _isFalling(0), _isAlive(0), _isCrouched(0), Character(demiLargeur, y, z, scale){
     }
 
-    void Player::draw(int i, int j, glm::mat4 &viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const {
+    void Player::draw(int i, int j, glm::mat4 &viewMatrix, SDLWindowManager &window) const {
         //attention 800..0/600.0 correspond largeur/hauteur fenetre, à voir + tard
         glm::mat4 projMatrix = glm::perspective(glm::radians(70.f),800.f/600.f ,0.1f,100.f);
         
@@ -61,18 +62,19 @@ namespace glimac {
         glUniform3f(uKs, 0.5f, 0.5f, 0.5f); //couleur tache speculaire
         glUniform1f(uShininess, 20);
 
-        //glBindVertexArray(AssetLoader::instance().models()["cat"].VAO());
-        glBindVertexArray(cube.vao);
+        glUniform1i(uTexture, 0);
+        glBindTexture(GL_TEXTURE_2D, AssetLoader::instance().models()["wolf"].textureID());
+
+        glBindVertexArray(AssetLoader::instance().models()["wolf"].VAO());
             glm::mat4 MVMatrix = viewMatrix*glm::translate(glm::mat4(1.0),glm::vec3(_x-50,_y+0.4, -(_z+1)+0.1));
-            MVMatrix = glm::scale(MVMatrix, glm::vec3(0.5, _scale*1.5, 0.6));
-            //MVMatrix = glm::scale(MVMatrix, glm::vec3(0.1, 0.1, 0.1));
+            MVMatrix = glm::scale(MVMatrix, glm::vec3(0.3, 0.4, 0.4));
             glm::mat4 NormalMatrix = glm::transpose(glm::inverse(MVMatrix));
             glUniformMatrix4fv(uMVPMatrix, 1, false, glm::value_ptr(projMatrix * MVMatrix));
             glUniformMatrix4fv(uMVMatrix, 1, false, glm::value_ptr(MVMatrix));
             glUniformMatrix4fv(uNormalMatrix, 1, false, glm::value_ptr(NormalMatrix));
-            //glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["cat"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
-            glDrawArrays(GL_TRIANGLES,0,cube.getVertexCount());
+            glDrawElements(GL_TRIANGLES, AssetLoader::instance().models()["wolf"].geometry().getIndexCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     void Player::move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position) {

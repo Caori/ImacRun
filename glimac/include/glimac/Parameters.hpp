@@ -58,6 +58,6 @@ namespace glimac {
 		/// \brief time between 2 frames (seconds)
 		const float _deltaTime = 1.f/30.f;
 		/// \brief running speed
-		const float _speed = 0.08;
+		const float _speed = 0.03;
 	};
 }

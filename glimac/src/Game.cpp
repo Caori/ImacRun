@@ -9,6 +9,10 @@
 #include <glimac/Score.hpp>
 #include <iostream>
 #include <glimac/Image.hpp>
+#include <glimac/FilePath.hpp>
+#include <glimac/Light.hpp>
+#include <glimac/DirectionalLight.hpp>
+#include <glimac/Parameters.hpp>
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -35,19 +39,19 @@ namespace glimac {
         _foes.erase(_foes.begin(), _foes.end());
     }
 
-	void Game::playGame(const FilePath& applicationPath) {
-        Menu menus(applicationPath);
-        GLuint menuBackgrounds = menus.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png",
-            applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", 
-            applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
+	void Game::playGame() {
+        Menu menus;
+        GLuint menuBackgrounds = menus.loadTexture(Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/menu/Menu-player.png",
+            Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", 
+            Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
 
-        Score score(applicationPath);
-        TTF_Font *font = TTF_OpenFont("/home/administrateur/Téléchargements/space_age.ttf", 100);
+        /*Score score;
+        TTF_Font *font = TTF_OpenFont("../../ImacRun/assets/fonts/space_age.ttf", 100);
         SDL_Color color = {255,0,0,0}; // font color
         unsigned int size = 100; // font size
         std::string message = "Score : " + std::to_string(_player._score);
         const char* texte = message.c_str();
-        GLuint scoreTexture = score.initializeScore(font, color, size, texte);
+        GLuint scoreTexture = score.initializeScore(font, color, size, texte);*/
 
 		while(!_done){
 			gameEvent();
@@ -90,9 +94,9 @@ namespace glimac {
             _windowManager.swapBuffers();
 		}
         glDeleteTextures(3,(GLuint*)(&menuBackgrounds));
-        glDeleteTextures(1, (GLuint*)(&scoreTexture));
+        /*glDeleteTextures(1, (GLuint*)(&scoreTexture));
         TTF_CloseFont(font);
-        TTF_Quit();
+        TTF_Quit();*/
 	}
 
     void Game::gameEvent(){
@@ -194,15 +198,21 @@ namespace glimac {
         Program _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/3D.vs.glsl",
                 Parameters::instance().appPath().dirPath() + "shaders/directionallight.fs.glsl"));
         _Program.use();
+
         glm::mat4 viewMatrix;
+
+        DirectionalLight light;
+        
         if (_cam==1){
             viewMatrix = _camera1.getViewMatrix();
-            _player.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
+            light.drawLight(viewMatrix, glm::vec4(0, 1, 0.5f, 0));
+            _player.draw(0, 0, viewMatrix,  _windowManager);
         }
         else{
             viewMatrix = _camera2.getViewMatrix();
+            light.drawLight(viewMatrix, glm::vec4(0, 1, 0.5f, 0));
         }
-        for_each(_foes.begin(), _foes.end(), [&](Foe* foe){foe->draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);});
+        for_each(_foes.begin(), _foes.end(), [&](Foe* foe){foe->draw(0, 0, viewMatrix, _windowManager);});
         _scene.drawScene(viewMatrix, _windowManager);
     }
 }

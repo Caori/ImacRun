@@ -26,10 +26,10 @@ int initialisation(){
     std::cout << "GLEW Version : " << glewGetString(GLEW_VERSION) << std::endl;
 }
 
-void startGame(SDLWindowManager &windowManager, const FilePath& applicationPath){
+void startGame(SDLWindowManager &windowManager){
     AssetLoader& assetLoader = AssetLoader::instance();
 	Game game(windowManager);
-    game.playGame(applicationPath);
+    game.playGame();
 }
 
 }
