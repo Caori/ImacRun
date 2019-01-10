@@ -1,9 +1,39 @@
 #include "glimac/Scene.hpp"
+#include "glimac/Exception.hpp"
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <glimac/Cube.hpp>
+#include <glimac/Sphere.hpp>
+#include <glimac/SDLWindowManager.hpp>
+#include <glimac/Object.hpp>
+#include <glimac/Ground.hpp>
+#include <glimac/Wall.hpp>
+#include <glimac/Coin.hpp>
+#include <glimac/Ark.hpp>
+#include <glimac/Obstacle.hpp>
+#include <glimac/Light.hpp>
+#include <glimac/DirectionalLight.hpp>
+#include <GL/glew.h>
+#include <string>
+#include <glimac/Image.hpp>
+#include "glimac/AssetLoader.hpp"
+#include <glimac/Model.hpp>
+#include <glimac/Parameters.hpp>
+#include <algorithm>
 
 namespace glimac {
 
 	Scene::Scene(const std::string& map)
 		:_posX(0), _posZ(0), _direction("NORD") {
+		_objects["Ground"] = new Ground(AssetLoader::instance().models()["cube"]);
+		_objects["Wall"] = new Wall(AssetLoader::instance().models()["barrel"]);
+		_objects["Coin1"] = new Coin(1, AssetLoader::instance().models()["coin"]);
+		_objects["Coin2"] = new Coin(2, AssetLoader::instance().models()["coin"]);
+		_objects["Coin3"] = new Coin(3, AssetLoader::instance().models()["coin"]);
+		_objects["Ark"] = new Ark(AssetLoader::instance().models()["bird"]);
+		_objects["Obstacle"] = new Obstacle(AssetLoader::instance().models()["cat"]);
 		//camera, lights à faire
 		try {
 			_grid = readPPM(map);
@@ -13,48 +43,38 @@ namespace glimac {
 		}
 	}
 
+	Scene::~Scene(){
+		for(std::map<std::string, Object*>::iterator it=_objects.begin(); it!=_objects.end(); it++){
+			delete(it->second);
+			_objects.erase(it);
+		}
+	}
+
 	void Scene::drawScene(glm::mat4& viewMatrix, SDLWindowManager& windowManager){
-
-		Ground ground(AssetLoader::instance().models()["cube"]);
-		Wall wall(AssetLoader::instance().models()["barrel"]);
-		Coin coin1(1, AssetLoader::instance().models()["coin"]);
-		Coin coin2(2, AssetLoader::instance().models()["coin"]);
-		Coin coin3(3, AssetLoader::instance().models()["coin"]);
-		Ark ark(AssetLoader::instance().models()["bird"]);
-		Obstacle obstacle(AssetLoader::instance().models()["cat"]);
-
-		DirectionalLight light;
-		light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
-
+		_light.drawLight(viewMatrix, glm::vec4(0, 1, 0, 0));
 		for (int i=0; i<_grid.size(); i++){
 	    	for (int j=0; j<_grid[0].size(); j++){
 	    		if (_grid[i][j][0] == 1){
-	    			ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+	    			_objects["Ground"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 	    		}
 				if (_grid[i][j][0] == 2){
 					switch(_grid[i][j][2]){
 						case 0:
-							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-							coin1.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							_objects["Coin1"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 						case 1:
-							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-							coin2.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+							_objects["Coin2"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 						case 2:
-							ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-							coin3.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);			
+							_objects["Coin3"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);			
 					}
 	    		}
 				if ( _grid[i][j][0] == 3){
-					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-					ark.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					_objects["Ark"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 				}
 				if (_grid[i][j][0] == 4){
-					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-					obstacle.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+					_objects["Obstacle"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 				}
 				if (_grid[i][j][0] == 5){
-					ground.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
-	    			wall.draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, windowManager);
+	    			_objects["Wall"]->draw(_grid.size()-(i+_posZ), _grid[0].size()/2-(j+_posX), viewMatrix, _cube, _sphere, windowManager);
 				}
 	    	}
 	    }
@@ -63,7 +83,7 @@ namespace glimac {
 	std::vector< std::vector< std::vector<int>>> Scene::readPPM(const std::string &map){
 		std::ifstream file(Parameters::instance().appPath().dirPath() + "../../ImacRun/assets/maps/" + map, std::ios::in);
 			if(!file){
-				THROW_EXCEPTION("Impossible de lire le fichier PPM");
+				THROW_EXCEPTION("Impossible de lire le fichier PPM : "+map);
 			}
 
 		int length, height;

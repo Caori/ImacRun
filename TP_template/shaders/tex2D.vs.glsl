@@ -5,6 +5,9 @@
 layout(location = 0) in vec2 aVertexPosition;
 layout(location = 1) in vec2 aTexCoord;
 
+/*in vec2 aVertexPosition;
+in vec2 aTexCoord;*/
+
 out vec2 vCoordTexture;
 out vec2 vPosition;
 

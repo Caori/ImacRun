@@ -15,6 +15,7 @@ int initialisation(){
         return EXIT_FAILURE;
     }
 
+    // SDL_ttf
     if(TTF_Init() == 1){
         std::cerr << TTF_GetError() << std::endl;
         THROW_EXCEPTION("Failed to load SDL_ttf library");

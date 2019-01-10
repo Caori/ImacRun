@@ -2,47 +2,63 @@
 #include "glimac/Game.hpp"
 #include "glimac/SDLWindowManager.hpp"
 #include "glimac/TrackballCamera.hpp"
+#include "glimac/Character.hpp"
 #include <glimac/Parameters.hpp>
 #include <glimac/Program.hpp>
+#include <glimac/Menu.hpp>
+#include <glimac/Score.hpp>
 #include <iostream>
 #include <glimac/Image.hpp>
-#include <glimac/DirectionalLight.hpp>
 #include <cmath>
+#include <vector>
+#include <algorithm>
 
 namespace glimac {
 
 	Game::Game(const SDLWindowManager &window)
 		:_windowManager(window),
 		_scene("map1.ppm"), 
-		_character(_scene.getWidth()/2),
-		// les 3 nombres en + : décalage hauteur, profondeur et scale pour les ennemis
-		_foe1(_scene.getWidth()/2+1, 0.3, -6., 0.6),
-		_foe2(_scene.getWidth()/2,  0.3, -6.,  0.7),
-		_foe3(_scene.getWidth()/2-1, 0.3, -6.,  0.65),
+		_player(_scene.getWidth()/2),
         _camera1(TrackballCamera()),
         _camera2(TrackballCamera(0, 0, 1.5)),
         _cam(2),
-		_done(false), _pause(2), _menu(0), _speed(Parameters::instance().getSpeed()) {
-		glEnable(GL_DEPTH_TEST);
+		_done(false), _pause(2), _menu(0), _speed(Parameters::instance().getSpeed()) 
+        {
+            _foes.push_back(new Foe(_scene.getWidth()/2+1, 0.3, -6., 0.6)); 
+            _foes.push_back(new Foe(_scene.getWidth()/2, 0.3, -6., 0.7)); 
+            _foes.push_back(new Foe(_scene.getWidth()/2-1, 0.3, -6., 0.65)); 
+    		glEnable(GL_DEPTH_TEST);
 	}	
 
+    Game::~Game(){
+        for_each(_foes.begin(), _foes.end(), [&](Foe* foe){delete(foe);});
+        _foes.erase(_foes.begin(), _foes.end());
+    }
+
 	void Game::playGame(const FilePath& applicationPath) {
-         Menu menus(applicationPath);
+        Menu menus(applicationPath);
         GLuint menuBackgrounds = menus.loadTexture(applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-player.png",
             applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-pause.png", 
             applicationPath.dirPath() + "../../ImacRun/assets/menu/Menu-gameover.png");
+
+        Score score(applicationPath);
+        TTF_Font *font = TTF_OpenFont("/home/administrateur/Téléchargements/space_age.ttf", 100);
+        SDL_Color color = {255,0,0,0}; // font color
+        unsigned int size = 100; // font size
+        std::string message = "Score : " + std::to_string(_player._score);
+        const char* texte = message.c_str();
+        GLuint scoreTexture = score.initializeScore(font, color, size, texte);
 
 		while(!_done){
 			gameEvent();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-           if(_pause == 2){
+            if(_pause == 2){
                 menus.displayMenu(_windowManager, &menuBackgrounds, 0);
-                //_menu = 0;
             }
 
-           if(_character._isAlive == 1){
+           if(_player._isAlive == 1){
                 menus.displayMenu(_windowManager, &menuBackgrounds, 2);
                 _pause = 3;
                 _menu = 2;
@@ -54,25 +70,29 @@ namespace glimac {
             }
 
             if(_pause == 0){
+                //score.displayScore(&scoreTexture);
     			_camera1.move(_scene._direction, _speed);
-                _camera2.setDistance(-_character._z-1);
-                _camera2.setLeft(_character._x-50);
-                _camera2.setUp(_character._y+0.5);
-    			_character.move(_scene._grid, _speed, _scene._direction);
-    			_foe1._z+=_speed+0.003*cos(_windowManager.getTime());
+                _camera2.setDistance(-_player.getZ()-1);
+                _camera2.setLeft(_player.getX()-50);
+                _camera2.setUp(_player.getY()+0.5);
+    			_player.move(_scene._grid, _speed, _scene._direction);
+                for_each(_foes.begin(), _foes.end(), [&](Foe* foe){foe->setZ(foe->getZ()+_speed);});
+    			/*_foe1.setZ(foe1.getZ()+_speed+0.003*cos(_windowManager.getTime()));
     			_foe2._z+=_speed+0.003*cos(2+0.8*_windowManager.getTime());;
-    			_foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;
-                if(_foe2._z >= _character._z){
+    			_foe3._z+=_speed+0.003*cos(1+0.6*_windowManager.getTime());;*/
+                if(_foes[1]->getZ() >= _player.getZ()){
                     std::cout<<"LOOOOOSE"<<std::endl;
+                    _player._isAlive = 1;
                 }
     			gameRendering();
             }
+
             _windowManager.swapBuffers();
 		}
         glDeleteTextures(3,(GLuint*)(&menuBackgrounds));
-        /*glDeleteTextures(1, (GLuint*)(&scoreTexture));
+        glDeleteTextures(1, (GLuint*)(&scoreTexture));
         TTF_CloseFont(font);
-        TTF_Quit();*/
+        TTF_Quit();
 	}
 
     void Game::gameEvent(){
@@ -89,21 +109,21 @@ namespace glimac {
 
 				case SDL_KEYDOWN:
 					if(_windowManager.isKeyPressed(SDLK_q) == true){
-						_character.moveLeft(_scene._grid, _scene._posX, _scene._posZ, _scene._direction);
+						_player.moveLeft(_scene._grid, _scene._posX, _scene._posZ, _scene._direction);
 					}
     	           	if(_windowManager.isKeyPressed(SDLK_d) == true){
-    	           		_character.moveRight(_scene._grid, _scene._posX, _scene._posZ, _scene._direction);
+    	           		_player.moveRight(_scene._grid, _scene._posX, _scene._posZ, _scene._direction);
     	           	}
     	           	if(_windowManager.isKeyPressed(SDLK_s) == true){
-                        if (_character._isCrouched == 0){
+                        if (_player._isCrouched == 0){
                             _timeTmp = _windowManager.getTime();
-    	                    _character._scale = 0.5;
-                            _character._y -=0.3;
-                            _character._isCrouched = 1;
+    	                    _player.setScale(0.5);
+                            _player.setY(_player.getY() -0.3);
+                            _player._isCrouched = 1;
                         }
                     }
                     if(_windowManager.isKeyPressed(SDLK_z) == true){
-    	                _character._jump = 1;
+    	                _player._jump = 1;
     	            }
                     if(_windowManager.isKeyPressed(SDLK_SPACE) == true){
                         if (_pause==0){_pause=1;}
@@ -118,7 +138,7 @@ namespace glimac {
                     }
                     break;
 
-                // Menus : 0 = main menu, 1 = pause, 2 = game over
+                     // Menus : 0 = main menu, 1 = pause, 2 = game over
                 case SDL_MOUSEBUTTONDOWN:
                     if(_menu == 0){
                         if(_windowManager.isMouseButtonPressed(SDL_BUTTON_LEFT) == true){
@@ -160,11 +180,11 @@ namespace glimac {
             } 	
         }
 
-        if (_character._isCrouched){
+        if (_player._isCrouched){
             if (_windowManager.getTime() - _timeTmp > 0.65){
-                _character._isCrouched = 0;
-                _character._scale = 1.;
-                _character._y +=0.3;
+                _player._isCrouched = 0;
+                _player.setScale(1.);
+                _player.setY(_player.getY()+0.3);
             }
         }
     }
@@ -177,18 +197,12 @@ namespace glimac {
         glm::mat4 viewMatrix;
         if (_cam==1){
             viewMatrix = _camera1.getViewMatrix();
-            _character.draw(0, 0, viewMatrix, _windowManager);
+            _player.draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);
         }
         else{
             viewMatrix = _camera2.getViewMatrix();
         }
-        DirectionalLight light;
-        light.drawLight(viewMatrix, glm::vec4(0.5f, 1, 1, 0));
-
-        _foe1.draw(0, 0, viewMatrix, _windowManager);
-        _foe2.draw(0, 0, viewMatrix, _windowManager);
-        _foe3.draw(0, 0, viewMatrix, _windowManager);
-
+        for_each(_foes.begin(), _foes.end(), [&](Foe* foe){foe->draw(0, 0, viewMatrix, _scene._cube, _scene._sphere, _windowManager);});
         _scene.drawScene(viewMatrix, _windowManager);
     }
 }

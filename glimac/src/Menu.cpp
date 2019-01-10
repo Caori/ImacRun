@@ -18,6 +18,8 @@ Vertex2DUV::Vertex2DUV(glm::vec2 &position,glm::vec2 &coordtexture)
 	:m_position(position),m_coordtexture(coordtexture)
 {}
 
+Menu::Menu(){}
+
 Menu::~Menu(){}
 
 GLuint Menu::initializeMenu(){
@@ -153,10 +155,6 @@ void Menu::displayMenu(SDLWindowManager &_windowManager, GLuint *texture, int in
     
     GLuint vao = initializeMenu();
     GLuint vao2 = initializeMenu2();
-
-    // rendering
-    //clean the window
-   // glClear(GL_COLOR_BUFFER_BIT);
 
     // each texture variable is associated with a texture unit
     glUniform1i(uModelTexture1, 0);

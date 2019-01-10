@@ -1,21 +1,19 @@
 #pragma once
 
-#include <fstream>
-#include <string>
-
+#include <vector>
+#include <GL/glew.h>
 #include <glimac/SDLWindowManager.hpp>
-#include <glimac/Parameters.hpp>
-#include "glimac/AssetLoader.hpp"
-#include "glimac/Exception.hpp"
-#include <glimac/Model.hpp>
-
+#include <glimac/Cube.hpp>
+#include <glimac/Sphere.hpp>
 #include <glimac/Object.hpp>
 #include <glimac/Ground.hpp>
-#include <glimac/Wall.hpp>
-#include <glimac/Coin.hpp>
-#include <glimac/Ark.hpp>
-#include <glimac/Obstacle.hpp>
+#include <glimac/TrackballCamera.hpp>
+#include <glimac/Character.hpp>
+#include <glimac/Model.hpp>
+#include <glimac/Light.hpp>
 #include <glimac/DirectionalLight.hpp>
+#include <string>
+#include <map>
 
 namespace glimac {
 	/*!
@@ -25,13 +23,21 @@ namespace glimac {
 	*/
 	class Scene {
 	public:
+		/*
+		Light _lights[];
+		Camera _cams[];*/
+		//TrackballCamera _trackCam;
+		Cube _cube;
+		Sphere _sphere;
 		int _posX, _posZ;
 		std::string _direction;
 		std::vector< std::vector< std::vector<int>>> _grid;
+		std::map<std::string, Object*> _objects;
+		DirectionalLight _light;
 
 		Scene(const std::string &map);
 
-		~Scene() {}
+		~Scene();
 
 		/*!
 		* \fn std::vector< std::vector< std::vector<int>>> readPPM(const std::string& map, const FilePath& applicationPath)

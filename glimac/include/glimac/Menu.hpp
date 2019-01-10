@@ -25,12 +25,9 @@ namespace glimac{
 		protected:
 			// path of the files needed (texture & shaders)
 			Program _Program; // load shaders
-			//FilePath& m_filepathTexture;
-			// uniform variables
-			GLint uModelMatrixLocation;
-		   	GLint uModelColor;
 		
 		public:
+			Menu();
 			Menu(const FilePath& applicationPath)
 			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/tex2D.vs.glsl",
 	                                  applicationPath.dirPath() + "shaders/multiTex2D.fs.glsl"))
