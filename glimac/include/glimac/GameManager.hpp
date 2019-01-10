@@ -17,5 +17,5 @@ namespace glimac {
 	* \param windowManager Reference to the windw manager
 	* \param applicationPath Reference to the main file path
 	*/
-	void startGame(SDLWindowManager& windowManager, const FilePath& applicationPath);
+	void startGame(SDLWindowManager& windowManager);
 }

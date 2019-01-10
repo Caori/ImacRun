@@ -7,6 +7,7 @@
 #include <glimac/SDLWindowManager.hpp>
 #include <glimac/Program.hpp>
 #include <glimac/FilePath.hpp>
+#include <glimac/Parameters.hpp>
 
 namespace glimac{
 
@@ -20,9 +21,9 @@ namespace glimac{
 		   	GLint uModelColor;
 		
 		public:
-			Score(const FilePath& applicationPath)
-			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/tex2D.vs.glsl",
-	                                  applicationPath.dirPath() + "shaders/simpleTex2D.fs.glsl"))
+			Score()
+			:  _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/tex2D.vs.glsl",
+	                                  Parameters::instance().appPath().dirPath() + "shaders/simpleTex2D.fs.glsl"))
 
 			{
 				_Program.use();

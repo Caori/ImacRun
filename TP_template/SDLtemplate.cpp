@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 
 	//ICI MENU	
 	//qui return start game si on clic sur start
-	startGame(windowManager, Parameters.appPath());
+	startGame(windowManager);
 
 	//dans la fonction startGame (cf. Gamemanager.cpp)  si bool pause ==1 --> afficher pause
 

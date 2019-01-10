@@ -7,6 +7,7 @@
 #include <glimac/Program.hpp>
 #include <glimac/FilePath.hpp>
 #include <glimac/Image.hpp>
+#include <glimac/Parameters.hpp>
 
 namespace glimac{
 
@@ -27,10 +28,10 @@ namespace glimac{
 			Program _Program; // load shaders
 		
 		public:
-			Menu();
-			Menu(const FilePath& applicationPath)
-			:  _Program(loadProgram(applicationPath.dirPath() + "shaders/tex2D.vs.glsl",
-	                                  applicationPath.dirPath() + "shaders/multiTex2D.fs.glsl"))
+			
+			Menu()
+			:  _Program(loadProgram(Parameters::instance().appPath().dirPath() + "shaders/tex2D.vs.glsl",
+	                                  Parameters::instance().appPath().dirPath() + "shaders/multiTex2D.fs.glsl"))
 
 			{
 				_Program.use();

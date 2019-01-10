@@ -15,10 +15,8 @@ Vertex2DUV::Vertex2DUV()
     :m_position(0,0),m_coordtexture(0,0)
 {}
 Vertex2DUV::Vertex2DUV(glm::vec2 &position,glm::vec2 &coordtexture)
-	:m_position(position),m_coordtexture(coordtexture)
+	:m_position(position), m_coordtexture(coordtexture)
 {}
-
-Menu::Menu(){}
 
 Menu::~Menu(){}
 

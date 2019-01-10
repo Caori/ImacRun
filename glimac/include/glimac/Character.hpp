@@ -64,7 +64,7 @@ namespace glimac {
 
 			~Foe(){}
 
-			void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
+			void draw(int i, int j, glm::mat4& viewMatrix, SDLWindowManager &window) const;
 	};
 
 	/*! \class Player
@@ -93,7 +93,7 @@ namespace glimac {
 			* \param cube Reference to the scene's cube primitive
 			* \param sphere Reference to the scene's cube primitive
 			*/
-			void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager &window) const;
+			void draw(int i, int j, glm::mat4& viewMatrix, SDLWindowManager &window) const;
 			
 			/*!
 			* \fn void move(std::vector< std::vector< std::vector<int>>> &grid, float speed, std::string &position)

@@ -57,7 +57,7 @@ namespace glimac {
 		* \param sphere Reference to the scene's cube primitive
 		* \param window Reference to the game's window
 		*/
-		virtual void draw(int i, int j, glm::mat4& viewMatrix, Cube& cube, Sphere& sphere, SDLWindowManager& window) const = 0;
+		virtual void draw(int i, int j, glm::mat4& viewMatrix, SDLWindowManager& window) const = 0;
 	};
 
 }

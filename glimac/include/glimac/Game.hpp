@@ -35,7 +35,7 @@ namespace glimac {
 		* \brief Renders the current state of the scene and makes the character, camera and foes move.
 		* \param applicationPath Path to main file, cannot be null
 		*/
-		void playGame(const FilePath& applicationPath);
+		void playGame();
 
 		/*!
 		* \fn void gameEvent()
