@@ -4,6 +4,7 @@
 #include <glimac/Scene.hpp>
 #include <glimac/SDLWindowManager.hpp>
 #include "glimac/Model.hpp"
+#include <vector>
 
 namespace glimac {
 	/*!
@@ -14,8 +15,8 @@ namespace glimac {
 	public:
 		SDLWindowManager _windowManager; /**< The current window manager */
 		Scene _scene; /**< The current scene with all its objects */
-		Character _character; /**< The object controlled by the player */
-		Character _foe1,_foe2, _foe3; /**< The enemies */
+		Player _player; /**< The object controlled by the player */
+		std::vector<Foe*> _foes; /**< The enemies */
 		TrackballCamera _camera1, _camera2; /**< The trackball camera */
 		int _cam;
 		bool _done; /**< Used to check if the game is over */

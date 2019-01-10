@@ -13,6 +13,7 @@
 #include <glimac/Light.hpp>
 #include <glimac/DirectionalLight.hpp>
 #include <string>
+#include <map>
 
 namespace glimac {
 	/*!
@@ -31,6 +32,8 @@ namespace glimac {
 		int _posX, _posZ;
 		std::string _direction;
 		std::vector< std::vector< std::vector<int>>> _grid;
+		std::map<std::string, Object*> _objects;
+		DirectionalLight _light;
 
 		Scene(const std::string &map);
 
